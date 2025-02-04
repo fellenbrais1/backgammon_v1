@@ -782,7 +782,6 @@ cookieDisagreeButton.addEventListener("click", rejectCookies);
 
 askJack.addEventListener("click", () => {
   pretendOpponentMessage();
-  addChatNotification();
 });
 
 // DEBUG BUTTONS LISTENERS
@@ -1331,15 +1330,15 @@ function addCurrentGameClass(currentGameFlag) {
   }
 }
 
-function setNewCookieData(userObject) {
-  const newData = {
-    userIP: userIP,
-    userUsername: userObject.username,
-    userPassword: userObject.password,
-    userDisplayName: userObject.displayName,
-  };
-  return newData;
-}
+// function setNewCookieData(userObject) {
+//   const newData = {
+//     userIP: userIP,
+//     userUsername: userObject.username,
+//     userPassword: userObject.password,
+//     userDisplayName: userObject.displayName,
+//   };
+//   return newData;
+// }
 
 function addPlayerDetails(player, userObject) {
   console.log(userObject);
@@ -1372,7 +1371,7 @@ function cookieCheck(cookieName) {
       readCookie(cookieName);
     console.log(`User has previously enabled cookies!`);
     if (userUsername !== "Guest" && userPassword !== "") {
-      userLogin(userUsername, userPassword);
+      // userLogin(userUsername, userPassword);
     }
   } else {
     setTimeout(() => {
@@ -1469,19 +1468,19 @@ function createCookieDefaultValues() {
   return cookieString;
 }
 
-function updateCookie(data) {
-  const cookieValues = {
-    userIP: data.userIP,
-    userUsername: data.userUsername,
-    userPassword: data.userPassword,
-    userDisplayName: data.userDisplayName,
-  };
-  const cookieString = JSON.stringify(cookieValues);
-  createCookie("userDetails", cookieString, 1);
-  [userIP, userUsername, userPassword, userDisplayName] =
-    readCookie("userDetails");
-  ipTest();
-}
+// function updateCookie(data) {
+//   const cookieValues = {
+//     userIP: data.userIP,
+//     userUsername: data.userUsername,
+//     userPassword: data.userPassword,
+//     userDisplayName: data.userDisplayName,
+//   };
+//   const cookieString = JSON.stringify(cookieValues);
+//   createCookie("userDetails", cookieString, 1);
+//   [userIP, userUsername, userPassword, userDisplayName] =
+//     readCookie("userDetails");
+//   ipTest();
+// }
 
 // Creates a cookie from a supplied name, data, and lifespan in days - should be fully configurable for other usecases
 // Called by acceptCookies()
@@ -1517,13 +1516,13 @@ function readCookie(cookieName) {
   return [userIP, userUsername, userPassword, userDisplayName];
 }
 
-function deleteGuestMessage() {
-  const firstMessage = document.querySelector(".disposable_message");
+// function deleteGuestMessage() {
+//   const firstMessage = document.querySelector(".disposable_message");
 
-  if (firstMessage) {
-    firstMessage.remove();
-  }
-}
+//   if (firstMessage) {
+//     firstMessage.remove();
+//   }
+// }
 
 // Parses the values from inside a particular cookie based on the supplied name
 // Called by readCookie()
@@ -1572,16 +1571,16 @@ function rejectCookies() {
   hideCookieBar();
 }
 
-function nameChangeCheck(oldName, newName) {
-  if (newName !== oldName) {
-    const message = `Name changed to <strong>${newName}</strong></>`;
-    const changeNameHTML = createChatMessage(message);
-    postChatMessage(changeNameHTML);
-    return;
-  } else {
-    return;
-  }
-}
+// function nameChangeCheck(oldName, newName) {
+//   if (newName !== oldName) {
+//     const message = `Name changed to <strong>${newName}</strong></>`;
+//     const changeNameHTML = createChatMessage(message);
+//     postChatMessage(changeNameHTML);
+//     return;
+//   } else {
+//     return;
+//   }
+// }
 
 // Tests to see if the userObject properties are available after assignment during set up - PASS
 // Called automatically
@@ -1649,9 +1648,6 @@ function step2Process() {
     prompt(`Please enter a displayname or log in.`);
   }
 }
-
-// TODO
-const gameBeginsElements = [chatSection];
 
 // Finishes the game start process and shows page elements to faciliate the game
 // Called by an eventListener on the 'gameStartButtonChallenge' button
