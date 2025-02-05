@@ -14,15 +14,17 @@ const boardLeftOffset = boardElement.getBoundingClientRect().left;
 const boardTopOffset = boardElement.getBoundingClientRect().top;
 //console.log('boardLeftOffset = ', boardLeftOffset, ', boardTopOffset = ', boardTopOffset);
 
-// function rollOnce() {
-//   board.throwDice(1);
-//   startingField.value = board.diceThrows;
-// }
+function rollOnce() {
+  const result = board.throwDice(1);
+  return result;
+  // startingField.value = board.diceThrows;
+}
 
-// function rollTwice() {
-//   board.throwDice(2);
-//   startingField.value = board.diceThrows;
-// }
+function rollTwice() {
+  const result = board.throwDice(2);
+  return result;
+  // startingField.value = board.diceThrows;
+}
 
 class CoordinateMapper {
   constructor() {
@@ -81,6 +83,7 @@ const board = {
         this.diceThrows[3] = this.diceThrows[0];
       }
     }
+    return this.diceThrows;
   },
 
   // Method to update a specific point by index
@@ -165,15 +168,30 @@ const board = {
 };
 
 window.addEventListener("message", (event) => {
-  const receivedMessage = JSON.parse(event.data);
+  const receivedMessage = event.data;
   handleMessageFromParent(receivedMessage);
 });
 
+function sendMessageToWebpage(message) {
+  window.parent.postMessage(JSON.stringify(message), "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
+}
+
 function handleMessageFromParent(messageData) {
   console.log("Iframe received:", messageData);
-  if (messageData === "startGame") {
-    startGame();
-    console.log(`DID IT HAPPEN?`);
+  let roll;
+  switch (messageData.type) {
+    case "startGame":
+      startGame();
+      break;
+    case "rollOnce":
+      roll = rollOnce();
+      console.log(roll);
+      sendMessageToWebpage({ type: "1DieResult", data: roll });
+      break;
+    case "rollTwice":
+      roll = rollTwice();
+      console.log(roll);
+      sendMessageToWebpage({ type: "2DiceResult", data: roll });
   }
 }
 

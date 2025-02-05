@@ -775,9 +775,11 @@ floatingButtonsToggle.addEventListener("click", () => {
 // DICE SECTION LISTENERS
 diceRollResult.addEventListener("click", () => {
   if (firstTurn) {
-    rollOneDie();
+    sendMessageToIframe({ type: "rollOnce", data: "none" });
+    // rollOneDie();
   } else {
-    rollTwoDice();
+    sendMessageToIframe({ type: "rollTwice", data: "none" });
+    // rollTwoDice();
   }
 });
 
@@ -802,6 +804,29 @@ cookieClearer.addEventListener("click", () => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
+
+window.addEventListener("message", (event) => {
+  const receivedMessage = JSON.parse(event.data);
+  handleMessageFromIframe(receivedMessage);
+});
+
+function sendMessageToIframe(message) {
+  iframeWindow.postMessage(message, "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
+}
+
+function handleMessageFromIframe(messageData) {
+  console.log("Webpage received:", messageData);
+  switch (messageData.type) {
+    case "1DieResult":
+      console.log(messageData.data);
+      rollOneDie(messageData.data);
+      break;
+    case "2DiceResult":
+      console.log(messageData.data);
+      rollTwoDice(messageData.data);
+      break;
+  }
+}
 
 // Shows the pages main elements on load or a site reset event
 // Called by window load event, eventHandlers on gameStartResetButton and buttonForfeitYes
@@ -838,10 +863,6 @@ function toggleClass(pageElement, property) {
     : pageElement.classList.add(property);
 }
 
-function sendMessageToIframe(message) {
-  iframeWindow.postMessage(message, "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
-}
-
 // TODO - NEEDS TO BE IMPLEMENTED CORRECTLY WITH NEW GAMESTART LOGIC
 // Gets the name of the other player for use in the chatbox display messages
 // Called by displayFunBoard(), displayProBoard()
@@ -867,21 +888,21 @@ function diceRoller() {
 
 // Simulates a one dice roll
 // Called by an eventHandler on diceRollResult
-function rollOneDie() {
-  let diceResult = 0;
+function rollOneDie(result) {
+  let roll1 = result[0];
   diceFace2.style.opacity = 0;
   diceRollSound.play();
   const target1 = diceFace1;
   rollingAnimation(target1);
   setTimeout(() => {
-    const roll1 = diceRoller();
+    // const roll1 = diceRoller();
     cycleDieFaces(roll1, "set", target1);
-    diceRollResult.textContent = roll1;
-    Number((diceResult = roll1));
+    diceRollResult.textContent = Number(roll1);
+    // Number((diceResult = roll1));
   }, 1010);
   setTimeout(() => {
     toggleClass(diceRollResult, "dice_result_display_final");
-    playDiceSound(diceResult);
+    playDiceSound(Number(roll1));
   }, 1110);
   setTimeout(() => {
     turnOneEnd();
@@ -891,25 +912,47 @@ function rollOneDie() {
 
 // Simulates a two dice roll
 // Called by an eventHandler on diceRollResult
-function rollTwoDice() {
-  let diceResult = 0;
+function rollTwoDice(result) {
+  let roll1 = result[0];
+  let roll2 = result[1];
+  let doubleRoll = false;
+  let totalRoll = 0;
+  let roll3,
+    roll4 = 0;
+  if (result[2] !== 0) {
+    roll3 = result[2];
+  }
+  if (result[3] !== 0) {
+    roll4 = result[3];
+  }
+  if ((result[2] !== 0) & (result[3] !== 0)) {
+    doubleRoll = true;
+  }
   diceRollSound.play();
   const target1 = diceFace1;
   const target2 = diceFace2;
   rollingAnimation(target1);
   rollingAnimation(target2);
   setTimeout(() => {
-    const roll1 = diceRoller();
-    const roll2 = diceRoller();
+    // const roll1 = diceRoller();
+    // const roll2 = diceRoller();
     cycleDieFaces(roll1, "set", target1);
     cycleDieFaces(roll2, "set", target2);
-    const totalRoll = roll1 + roll2;
-    diceRollResult.textContent = totalRoll;
-    Number((diceResult = totalRoll));
+    if (doubleRoll === true) {
+      totalRoll = roll1 + roll2 + roll3 + roll4;
+    } else {
+      totalRoll = roll1 + roll2;
+    }
+    diceRollResult.textContent = Number(totalRoll);
+    // Number((diceResult = totalRoll));
   }, 1010);
   setTimeout(() => {
     toggleClass(diceRollResult, "dice_result_display_final");
-    playDiceSound(diceResult);
+    if (doubleRoll === true) {
+      console.log(`Double Roll ${totalRoll}`);
+    } else {
+      playDiceSound(totalRoll);
+    }
   }, 1110);
   setTimeout(() => {
     shrinkDiceResult();
@@ -1699,7 +1742,7 @@ function step3Process() {
       imbedGame.classList.remove("hidden");
       imbedGame.classList.remove("no_pointer_events");
       setTimeout(() => {
-        const message = JSON.stringify(`startGame`);
+        const message = JSON.stringify({ type: "startGame", data: "none" });
         sendMessageToIframe(message);
       }, 1000);
       // greyOverlay.classList.remove("show");
