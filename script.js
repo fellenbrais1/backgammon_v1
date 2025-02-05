@@ -30,6 +30,8 @@ const gameStartButtonChallenge = document.querySelector(
 
 // Game board elements
 const gameBoard = document.querySelector(".game_board");
+const imbedGame = document.getElementById("imbed_game");
+const iframe = document.getElementById("imbed_game");
 
 // Forfeit section elements
 const forfeitSection = document.querySelector(".forfeit_section");
@@ -157,6 +159,9 @@ const number12 = document.getElementById("number12");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
+
+// BOARD SECTION VARIABLES
+const iframeWindow = iframe.contentWindow;
 
 // FORFEIT SECTION VARIABLES
 // Game reset lists
@@ -831,6 +836,10 @@ function toggleClass(pageElement, property) {
   pageElement.classList.contains(property)
     ? pageElement.classList.remove(property)
     : pageElement.classList.add(property);
+}
+
+function sendMessageToIframe(message) {
+  iframeWindow.postMessage(message, "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
 }
 
 // TODO - NEEDS TO BE IMPLEMENTED CORRECTLY WITH NEW GAMESTART LOGIC
@@ -1686,7 +1695,14 @@ function step3Process() {
     setTimeout(() => {
       chatSection.classList.add("scroll_on");
       adNotification.classList.add("show");
-      greyOverlay.classList.remove("show");
+      imbedGame.classList.add("show");
+      imbedGame.classList.remove("hidden");
+      imbedGame.classList.remove("no_pointer_events");
+      setTimeout(() => {
+        const message = JSON.stringify(`startGame`);
+        sendMessageToIframe(message);
+      }, 1000);
+      // greyOverlay.classList.remove("show");
     }, 1000);
   }
 }
