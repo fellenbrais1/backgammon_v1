@@ -1,7 +1,6 @@
 #board {
   background-image: url("../assets/big_backgammon_enhanced_35pct.png");
   width: 660px;
-  /* adjust to fit board image */
   height: 472px;
   position: relative;
   padding: 10px;
@@ -13,9 +12,7 @@
 }
 
 .piece {
-  /* Prevents text selection */
   user-select: none;
-  /* Shows a grab cursor on hover */
   cursor: grab;
 
   width: 36px;
@@ -25,8 +22,6 @@
   cursor: pointer;
   left: 6px;
   top: 6px;
-  font-size: 24px;
-  font-weight: bold;
   box-shadow: 0 0 0 1px #888;
 }
 
@@ -36,13 +31,13 @@
   height: 36px;
   line-height: 36px; /* Centers the number vertically */
   text-align: center; /* Centers the number horizontally */
-  font-size: 16px; /* Adjust font size as needed */
-  color: grey; /* Number color */
+  font-size: 20px;
+  font-weight: bold;
+  color: grey;
   pointer-events: none; /* Allows clicks to pass through to the piece */
-  background: transparent; /* Transparent background */
+  background: transparent;
 }
 
 .piece:active {
   cursor: grabbing;
-  /* Shows a grabbing cursor when dragging */
 }
