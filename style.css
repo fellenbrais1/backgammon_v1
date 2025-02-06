@@ -169,6 +169,8 @@ html {
 
 .gamestart_button_fun {
   background-color: var(--youtube_red);
+  font-size: 24px;
+  padding-top: 4px;
 }
 
 .gamestart_opponent_div,
@@ -267,6 +269,14 @@ html {
 }
 
 /* GAME BOARD ELEMENTS */
+.game_board_div {
+  display: grid;
+  grid-template-columns: 110px auto 110px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .game_board {
   position: absolute;
   top: 0;
@@ -943,7 +953,7 @@ html {
   grid-template-columns: auto auto;
   grid-template-rows: 1fr;
   position: absolute;
-  top: 590px;
+  top: 596px;
   right: 1%;
   height: 180px;
   width: 450px;
@@ -1131,11 +1141,10 @@ html {
 
 /* DEBUG BUTTON ELEMENTS */
 .toggle_ads_button,
-.toggle_game_button,
 .clear_cookie_button,
 .ask_jack_button {
   position: absolute;
-  top: 8.5%;
+  top: 6%;
   left: 5%;
   cursor: pointer;
 }
@@ -1144,12 +1153,8 @@ html {
   top: 1%;
 }
 
-.toggle_game_button {
-  top: 3.5%;
-}
-
 .clear_cookie_button {
-  top: 6%;
+  top: 3.5%;
 }
 
 /* PAGE RESET CLASSES */

@@ -337,6 +337,19 @@ let guestUserObject = {
   friends: [],
 };
 
+// Opponent user object
+let opponentObject = {
+  username: "Guest",
+  password: "Guest",
+  displayName: "Guest",
+  playerPortrait: "img/portrait_male.png",
+  portraitColour: "#FFFFFF",
+  playerRating: 0,
+  member: false,
+  languages: ["english"],
+  friends: [],
+};
+
 // Player objects
 const playersObjectArr = [
   {
@@ -407,6 +420,9 @@ let userMessageStyleToggle = false;
 let opponentMessageStyleToggle = false;
 
 // OTHER GAMES SECTION VARIABLES
+let otherGamesBackgammonButton;
+let otherGamesMurderMansionButton;
+
 const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
     <img src="img/MOMABackgammon.png" alt="Backgammon game picture" />
     <p>Backgammon</p>
@@ -632,6 +648,7 @@ buttonForfeitYes.addEventListener("click", () => {
         showMain();
         resetDice();
       }, 1000);
+      sendMessageToIframe({ type: "resetBoard", data: "none" });
     }, 5000);
   });
 });
@@ -776,10 +793,8 @@ floatingButtonsToggle.addEventListener("click", () => {
 diceRollResult.addEventListener("click", () => {
   if (firstTurn) {
     sendMessageToIframe({ type: "rollOnce", data: "none" });
-    // rollOneDie();
   } else {
     sendMessageToIframe({ type: "rollTwice", data: "none" });
-    // rollTwoDice();
   }
 });
 
@@ -788,11 +803,10 @@ cookieAgreeButton.addEventListener("click", setCookieUserDetails);
 cookieDisagreeButton.addEventListener("click", rejectCookies);
 
 askJack.addEventListener("click", () => {
-  pretendOpponentMessage();
+  addOpponentMessage();
 });
 
 // DEBUG BUTTONS LISTENERS
-gameToggler.addEventListener("click", resetGame);
 
 // Test function call to delete the cookie and reload the page
 // Called by an eventHandler on the 'Clear Cookie - TEST' button
@@ -805,15 +819,17 @@ cookieClearer.addEventListener("click", () => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
 
+// WINDOW FUNCTIONS
+
+// Allows the window object to trigger handleMessageFromIframe when receiving a message from the iframe object
+// Called whenever the iframe object sends a message to the window object
 window.addEventListener("message", (event) => {
   const receivedMessage = JSON.parse(event.data);
   handleMessageFromIframe(receivedMessage);
 });
 
-function sendMessageToIframe(message) {
-  iframeWindow.postMessage(message, "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
-}
-
+// Triggers various functions based on the content of a message received from the iframe object
+// Called by an eventListener on the window object
 function handleMessageFromIframe(messageData) {
   console.log("Webpage received:", messageData);
   switch (messageData.type) {
@@ -828,8 +844,17 @@ function handleMessageFromIframe(messageData) {
   }
 }
 
+// TODO - See comment in this function
+// Sends a message to the iframe object from the window object
+// Called by
+function sendMessageToIframe(message) {
+  iframeWindow.postMessage(message, "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
+}
+
+// MAIN DISPLAY FUNCTIONS
+
 // Shows the pages main elements on load or a site reset event
-// Called by window load event, eventHandlers on gameStartResetButton and buttonForfeitYes
+// Called by a window load event, eventHandlers on gameStartResetButton and buttonForfeitYes
 function showMain() {
   setTimeout(() => {
     gameBoard.classList.add("show");
@@ -867,16 +892,8 @@ function toggleClass(pageElement, property) {
 // Gets the name of the other player for use in the chatbox display messages
 // Called by displayFunBoard(), displayProBoard()
 function getOpponentName() {
-  const opponentName = buttonGamestartOpponent.textContent;
+  const opponentName = opponentObject.displayName;
   return opponentName;
-}
-
-// Experimental function to reset the gamestart_block element and the image displayed in the gamebox, will later be assimilated into the page as a game reset type button
-// Called by an eventHandler on the 'Toggle Game - TEST' button
-function resetGame() {
-  gamestartBox.style.display = "grid";
-  greyOverlay.classList.add("show");
-  gameBoard.src = "img/backgammon.jpg";
 }
 
 // DICE SECTION FUNCTIONS
@@ -887,7 +904,7 @@ function diceRoller() {
 }
 
 // Simulates a one dice roll
-// Called by an eventHandler on diceRollResult
+// Called by an eventHandler on diceRollResult(click)
 function rollOneDie(result) {
   let roll1 = result[0];
   diceFace2.style.opacity = 0;
@@ -911,7 +928,7 @@ function rollOneDie(result) {
 }
 
 // Simulates a two dice roll
-// Called by an eventHandler on diceRollResult
+// Called by an eventHandler on diceRollResult(click)
 function rollTwoDice(result) {
   let roll1 = result[0];
   let roll2 = result[1];
@@ -1079,6 +1096,13 @@ function getTimeStamp() {
   return `${hours}:${minutes}:${seconds}`;
 }
 
+// Captures the users display name or 'Guest' if one is not set and returns it
+// Called by startGameMessages(), createChatMessage()
+function getUserDisplayName() {
+  const displayName = playerNameForm.value;
+  return displayName;
+}
+
 // Adds a chat message HTML literal string to the chat display elements innerHTML
 // Called by addChatMessage()
 function postChatMessage(messageHTML, position = "beforeend") {
@@ -1091,25 +1115,28 @@ function displayLatestMessage() {
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
 }
 
-// Captures the users display name or 'Guest' if one is not set and returns it
-// Called by startGameMessages(), createChatMessage()
-function getUserDisplayName() {
-  const displayName =
-    userDisplayName === undefined || userDisplayName === null
-      ? "Guest"
-      : userDisplayName;
-  return displayName;
-}
-
-// Generates and posts a chatbox message from a pretend opponent
+// Generates and posts a chatbox message from the opponent
 // Called by an eventHandler on the 'Ask Jack - TEST' button
-function pretendOpponentMessage() {
+function addOpponentMessage() {
   const messageHTML = createOpponentMessage(
     "Jack",
     "That would be an ecumenical matter..."
   );
   postChatMessage(messageHTML);
   displayLatestMessage();
+}
+
+// TODO - Change this function to make it work with real opponenet messages
+// Creates a message form an opponent to them be posted in the chatbox, message styling is unique to the opponent to differentiate between player 1 and player 2
+// Called by addOpponentMessage()
+function createOpponentMessage(opponentName, message) {
+  const timeStamp = getTimeStamp();
+  const messageClass = opponentMessageStyleToggle
+    ? "chat_entry_e"
+    : "chat_entry_f";
+  const messageHTML = `<p class='${messageClass}'><strong class='opponent_name'>${opponentName}:</strong> ${message} - ${timeStamp}</p>`;
+  opponentMessageStyleToggle = opponentMessageStyleToggle ? false : true;
+  return messageHTML;
 }
 
 // Displays a message in the chatbox on a forfeit game event
@@ -1122,19 +1149,6 @@ function forfeitMessage() {
   chatHTML2 = `<p class='chat_entry_d'><strong>${opponentName}</strong> wins the game!</p>`;
   addGameNotification(chatHTML);
   addGameNotification(chatHTML2);
-}
-
-// TODO -
-// Creates a message form an opponent to them be posted in the chatbox, message styling is unique to the opponent to differentiate between player 1 and player 2
-// Called by pretendOpponentMessage()
-function createOpponentMessage(opponentName, message) {
-  const timeStamp = getTimeStamp();
-  const messageClass = opponentMessageStyleToggle
-    ? "chat_entry_e"
-    : "chat_entry_f";
-  const messageHTML = `<p class='${messageClass}'><strong class='opponent_name'>${opponentName}:</strong> ${message} - ${timeStamp}</p>`;
-  opponentMessageStyleToggle = opponentMessageStyleToggle ? false : true;
-  return messageHTML;
 }
 
 // Plays the set click sound for the webpage
@@ -1164,6 +1178,10 @@ function addGameNotification(HTML) {
   chatDisplay.insertAdjacentHTML("beforeend", HTML);
 }
 
+// PLAYERS SECTION FUNCTIONS
+
+// Creates and adds online and offline player elements when opening the players section tab
+// Called by showMain(), eventHandler on playersButton(click)
 function populatePlayers(playerList, section) {
   const newPlayerList = playerList.toSorted().reverse();
   let HTML;
@@ -1206,6 +1224,8 @@ function populatePlayers(playerList, section) {
   sortPlayerDisplay(section);
 }
 
+// Allows HTML content of created online player elements to be changed if online
+// Called by populatePlayers()
 function checkPlayerOnline(player, playersOnline) {
   if (playersOnline.includes(player)) {
     return true;
@@ -1214,6 +1234,8 @@ function checkPlayerOnline(player, playersOnline) {
   }
 }
 
+// Allows HTML content of created online player elements to be changed if in a game
+// Called by populatePlayers()
 function checkPlayerInGame(player, playersInGame) {
   if (playersInGame.includes(player)) {
     return true;
@@ -1222,6 +1244,22 @@ function checkPlayerInGame(player, playersInGame) {
   }
 }
 
+// Adds eventListeners to each created online player element in the players section
+// Called by populatePlayers()
+function addPlayerEventListeners(playerList) {
+  playerList.forEach((player) => {
+    const element = ".player_is_" + player;
+    const DOMElement = document.querySelectorAll(element);
+    DOMElement.forEach((current) => {
+      current.addEventListener("click", () => {
+        displayPlayer2Name(current.textContent);
+      });
+    });
+  });
+}
+
+// Sorts the created player elements based on their online, ingame, or offline status
+// Called by populatePlayers()
 function sortPlayerDisplay(element) {
   const container = element;
   const playersArray = Array.from(container.children);
@@ -1250,28 +1288,14 @@ function sortPlayerDisplay(element) {
   playersArray.forEach((child) => element.appendChild(child));
 }
 
-function addPlayerEventListeners(playerList) {
-  playerList.forEach((player) => {
-    const element = ".player_is_" + player;
-    const DOMElement = document.querySelectorAll(element);
-    DOMElement.forEach((current) => {
-      current.addEventListener("click", () => {
-        displayPlayer2Name(current.textContent);
-      });
-    });
-  });
-}
-
-// TODO
-// MAKE THIS FUNCTION CHANGE THE PLAYER SELECTION DIALOGUE BOX WHEN READY
-// function displayPlayerName(playerName) {
-//   playerNameForm.value = playerName;
-// }
-
+// Displays the chosen opponents name in the gamestart opponent name element
+// Called by an eventHandler on each created player element in the players tab
 function displayPlayer2Name(playerName) {
   buttonGamestartOpponent.textContent = playerName;
 }
 
+// Allows the hiding or showing of player elements if the player is offline
+// Called by an eventHandler onlinePlayersToggleButton(click)
 function toggleOnlinePlayersOnly() {
   const container = playersFriends;
   const playersArray = Array.from(container.children);
@@ -1287,6 +1311,8 @@ function toggleOnlinePlayersOnly() {
   }
 }
 
+// Changes the styling of a player element to hidden if they are offline
+// Called by toggleOnlinePlayersOnly()
 function removeOfflinePlayers(playersArrays) {
   playersArrays.forEach((array) => {
     array.forEach((current) => {
@@ -1297,6 +1323,8 @@ function removeOfflinePlayers(playersArrays) {
   });
 }
 
+// Changes the styling of a player element to visible if they are offline
+// Called by toggleOnlinePlayersOnly()
 function addOfflinePlayers(playersArrays) {
   playersArrays.forEach((array) => {
     array.forEach((current) => {
@@ -1310,6 +1338,8 @@ function addOfflinePlayers(playersArrays) {
   });
 }
 
+// Allows the hiding or showing of player elements if the player is not in a game
+// Called by an eventHandler on freePlayersToggleButton()
 function toggleFreePlayersOnly() {
   const container = playersFriends;
   const playersArray = Array.from(container.children);
@@ -1327,6 +1357,8 @@ function toggleFreePlayersOnly() {
   }
 }
 
+// Changes the styling of a player element to hidden if they are in a game
+// Called by toggleFreePlayersOnly()
 function removeInGamePlayers(playersArrays) {
   playersArrays.forEach((array) => {
     array.forEach((current) => {
@@ -1337,6 +1369,8 @@ function removeInGamePlayers(playersArrays) {
   });
 }
 
+// Changes the styling of a player element to visible if they are offline
+// Called by toggleFreePlayersOnly()
 function addInGamePlayers(playersArrays) {
   playersArrays.forEach((array) => {
     array.forEach((current) => {
@@ -1350,6 +1384,10 @@ function addInGamePlayers(playersArrays) {
   });
 }
 
+// OTHER GAMES SECTION FUNCTIONS
+
+// Populates the other games tab with other games objects in a list
+// Called by an eventHandler on otherGamesButton(click)
 function populateOtherGames(otherGamesHTML) {
   if (otherGamesPopulatedFlag === false) {
     let fullHTML = "";
@@ -1366,9 +1404,8 @@ function populateOtherGames(otherGamesHTML) {
   }
 }
 
-let otherGamesBackgammonButton;
-let otherGamesMurderMansionButton;
-
+// Adds different styling to the other games element that matches the current one
+// Called by an eventHandler on otherGamesButton(click)
 function addCurrentGameClass(currentGameFlag) {
   if (otherGamesPopulatedFlag === false) {
     switch (currentGameFlag) {
@@ -1381,16 +1418,6 @@ function addCurrentGameClass(currentGameFlag) {
     }
   }
 }
-
-// function setNewCookieData(userObject) {
-//   const newData = {
-//     userIP: userIP,
-//     userUsername: userObject.username,
-//     userPassword: userObject.password,
-//     userDisplayName: userObject.displayName,
-//   };
-//   return newData;
-// }
 
 function addPlayerDetails(player, userObject) {
   console.log(userObject);
@@ -1408,6 +1435,16 @@ function addPlayerDetails(player, userObject) {
 }
 
 // COOKIE FUNCTIONS
+
+// function setNewCookieData(userObject) {
+//   const newData = {
+//     userIP: userIP,
+//     userUsername: userObject.username,
+//     userPassword: userObject.password,
+//     userDisplayName: userObject.displayName,
+//   };
+//   return newData;
+// }
 
 // Checks if a particular cookie already exists and either parses its values if existing, or shows the cookies permission bar if it does not yet exist
 // Called by an eventHandler linked to the loading of the window
@@ -1435,6 +1472,8 @@ function cookieCheck(cookieName) {
   }
 }
 
+// Sets up the cookie the first time it is created
+// Called by setCookieUserDetails
 function initializeCookie() {
   setUpUserData();
   setTimeout(() => {}, 1000);
@@ -1568,14 +1607,6 @@ function readCookie(cookieName) {
   return [userIP, userUsername, userPassword, userDisplayName];
 }
 
-// function deleteGuestMessage() {
-//   const firstMessage = document.querySelector(".disposable_message");
-
-//   if (firstMessage) {
-//     firstMessage.remove();
-//   }
-// }
-
 // Parses the values from inside a particular cookie based on the supplied name
 // Called by readCookie()
 function retrieveCookieValues(cookieName) {
@@ -1623,6 +1654,7 @@ function rejectCookies() {
   hideCookieBar();
 }
 
+// TODO - Re-instate this when settings are enabled for player name change
 // function nameChangeCheck(oldName, newName) {
 //   if (newName !== oldName) {
 //     const message = `Name changed to <strong>${newName}</strong></>`;
@@ -1643,19 +1675,23 @@ function ipTest() {
   }, 5000);
 }
 
+// Allows the turn one logic to be finished and for the game to move on to the main phase
+// Called by rollOneDie()
 function turnOneEnd() {
   diceFace2.style.opacity = 1;
   firstTurn = false;
 }
 
+// Allows the diceResult element to shrink back down to its original size and style
+// Called by rollOneDie(), rollTwoDice()
 function shrinkDiceResult() {
   diceRollResult.classList.remove("dice_result_display_final");
 }
 
 ///////////////////////////////
-// CYCLING THROUGH PICTURE ADS
+// AD SECTION FUNCTIONS
 
-// Experimental function to cycle through the available ads using random numbers, changes properties of image ad elements on the page
+// Cycles through the available ads using random numbers, changes properties of image ad elements on the webpage
 // Called automatically on a 10 second interval
 function imgAdCycler() {
   setTimeout(() => {
@@ -1670,6 +1706,8 @@ function imgAdCycler() {
   }, 0);
 }
 
+// Moves the game start process on to step 2
+// Called by an eventHandler on buttonGameStartFun(click)
 function step1Process() {
   if (buttonGamestartFun.classList.contains("focus_button")) {
     step2Elements.forEach((element) => {
@@ -1683,6 +1721,8 @@ function step1Process() {
   }
 }
 
+// Moves the game start process on to step 3
+// Called by and eventHandler on the 'playerNameForm' element (press enter)
 function step2Process() {
   if (playerNameForm.value !== "") {
     step3Elements.forEach((element) => {
@@ -1692,6 +1732,7 @@ function step2Process() {
     playersSection.classList.add("show");
     playersSection.classList.add("scroll_on");
     playerNameElement.classList.remove("focus_element");
+    playerNameElement.classList.add("no_pointer_events");
     buttonGamestartOpponent.classList.add("focus_element");
     gameStartButtonChallenge.classList.add("focus_element");
     gameStartButtonChallenge.classList.remove("no_pointer_events");
@@ -1702,7 +1743,7 @@ function step2Process() {
 }
 
 // Finishes the game start process and shows page elements to faciliate the game
-// Called by an eventListener on the 'gameStartButtonChallenge' button
+// Called by an eventListener on the 'gameStartButtonChallenge' button (click)
 function step3Process() {
   if (buttonGamestartOpponent.textContent != "") {
     chatSection.classList.add("show");
@@ -1726,11 +1767,9 @@ function step3Process() {
     forfeitButton.classList.remove("grey_button");
     settingsButton.classList.remove("grey_button");
     playersButton.classList.remove("grey_button");
-    const jackObject = playersObjectArr.find(
-      (current) => current.displayName === "Jack"
-    );
-    addPlayerDetails(2, jackObject);
-    const opponentName = getOpponentName();
+    opponentObject.displayName = buttonGamestartOpponent.textContent;
+    const opponentName = opponentObject.displayName;
+    addPlayerDetails(2, opponentObject);
     startGameMessages("fun", userDisplayName, opponentName);
     openingJingle.play();
     helperBox.classList.remove("show");
@@ -1742,10 +1781,8 @@ function step3Process() {
       imbedGame.classList.remove("hidden");
       imbedGame.classList.remove("no_pointer_events");
       setTimeout(() => {
-        const message = JSON.stringify({ type: "startGame", data: "none" });
-        sendMessageToIframe(message);
+        sendMessageToIframe({ type: "startGame", data: "none" });
       }, 1000);
-      // greyOverlay.classList.remove("show");
     }, 1000);
   }
 }
@@ -1770,11 +1807,13 @@ function changeHelper(step) {
 
 const resetSiteAddNoPointerEvents = [
   diceSection,
+  playerNameElement,
   settingsSection,
   rulesSection,
   otherGamesSection,
   adSection,
   forfeitSection,
+  iframe,
 ];
 
 const greyOutButtons = [forfeitButton, settingsButton, playersButton];
@@ -1794,6 +1833,9 @@ function resetSite() {
   });
   playersSection.style.top = "15%";
   playersSection.style.left = "1%";
+  imbedGame.classList.remove("show");
+  imbedGame.classList.add("hidden");
+  imbedGame.classList.add("no_pointer_events");
   return;
 }
 

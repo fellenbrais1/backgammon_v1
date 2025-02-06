@@ -9,21 +9,61 @@ const pieces = document.querySelectorAll(".piece");
 
 // let region, point;
 
+// SOUND
+const piecesDeal = document.getElementById("pieces_deal");
+
 const boardElement = document.getElementById("board");
 const boardLeftOffset = boardElement.getBoundingClientRect().left;
 const boardTopOffset = boardElement.getBoundingClientRect().top;
-//console.log('boardLeftOffset = ', boardLeftOffset, ', boardTopOffset = ', boardTopOffset);
+console.log(
+  "boardLeftOffset = ",
+  boardLeftOffset,
+  ", boardTopOffset = ",
+  boardTopOffset
+);
+
+let gameState = "start";
+let firstTurn = true;
+
+function changeGameState(state) {
+  switch (state) {
+    case "setup":
+      gameState = "setup";
+      break;
+    case "firstTurn player1":
+      gameState = "firstTurn player1";
+      activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "firstTurn player2":
+      gameState = "firstTurn player2";
+      activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "turn player1":
+      gameState = "turn player1";
+      activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "turn player2":
+      gameState = "turn player2";
+      activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "end":
+      gameState = "end";
+      break;
+  }
+  const gameStateMessage = { type: "gameState", data: gameState };
+  sendMessageToWebpage(gameStateMessage);
+}
 
 function rollOnce() {
   const result = board.throwDice(1);
-  return result;
   // startingField.value = board.diceThrows;
+  return result;
 }
 
 function rollTwice() {
   const result = board.throwDice(2);
-  return result;
   // startingField.value = board.diceThrows;
+  return result;
 }
 
 class CoordinateMapper {
@@ -95,16 +135,21 @@ const board = {
     this.contents[index] = { ...this.contents[index], ...newContent };
   },
 
+  resetPiecesPosition(piece) {
+    piece.style.top = "6px";
+    piece.style.left = "6px";
+  },
+
   // Method to reset the board
   resetBoard() {
     this.contents = this.contents.map(() => ({
-      // color: '',
+      color: "",
       occupied: [],
     }));
 
     // Starting positions
-    this.contents[1].occupied = ["r1"];
-    this.contents[2].occupied = ["r2"];
+    this.contents[1].occupied = ["r1", "r2"];
+    this.contents[2].occupied = [];
     this.contents[3].occupied = [];
     this.contents[4].occupied = [];
     this.contents[5].occupied = [];
@@ -139,7 +184,7 @@ const board = {
     const pointsNumber = document.getElementById(pieceNumberId);
 
     let occupied = this.contents[pointNumber].occupied.length;
-    //let color = this.contents[pointNumber].color;
+    // let color = this.contents[pointNumber].color;
     let pointColor = this.colorOfPoint(pointNumber);
 
     let limit = pointNumber < 25 ? 5 : 1; // 5 points without occupied number, 1 on bars (points 25 and 26)
@@ -192,10 +237,19 @@ function handleMessageFromParent(messageData) {
       roll = rollTwice();
       console.log(roll);
       sendMessageToWebpage({ type: "2DiceResult", data: roll });
+      break;
+    case "resetBoard":
+      board.resetBoard();
+      pieces.forEach((current) => {
+        board.resetPiecesPosition(current);
+      });
+      console.log(`Resetting board...`);
+      break;
   }
 }
 
 function startGame() {
+  piecesDeal.play();
   board.resetBoard();
   drawBoard();
 }
@@ -208,11 +262,11 @@ pieces.forEach((piece) => {
     // which piece?
     const x = piece.offsetLeft + PIECE_RADIUS;
     const y = piece.offsetTop + PIECE_RADIUS;
-    // console.log(x, y);
+    console.log(x, y);
     const { pt, pos } = mapper.findPointAndPos(x, y);
-    //console.log('Grabbed at pt = ', pt, ' pos = ', pos);
+    console.log("Grabbed at pt = ", pt, " pos = ", pos);
 
-    //console.log(`piece X: ${x}, Y: ${y}`);
+    console.log(`piece X: ${x}, Y: ${y}`);
     // startingField.value = "[" + pt + "," + pos + "]";
 
     if (!isPieceMovable(piece, pt, pos)) {
@@ -234,11 +288,11 @@ pieces.forEach((piece) => {
     board.contents[point].occupied.pop();
     board.updatePointOccupation(point);
 
-    // startingField.value = '[' + point + ']';
+    // startingField.value = "[" + point + "]";
 
     // Store the starting position
-    // let startX = piece.style.left || "0px";
-    // let startY = piece.style.top || "0px";
+    let startX = piece.style.left || "0px";
+    let startY = piece.style.top || "0px";
 
     const onMouseMove = (event) => {
       piece.style.left =
@@ -256,14 +310,14 @@ pieces.forEach((piece) => {
     piece.addEventListener(
       "mouseup",
       (event) => {
-        //console.log('startX = ' + startX + ', startY = ' + startY);
+        console.log("startX = " + startX + ", startY = " + startY);
         document.removeEventListener("mousemove", onMouseMove);
         piece.style.zIndex = "";
         applyHighlight(0, 0);
 
         let point = identifyPoint(event.pageX, event.pageY);
         currentMove.to = point;
-        // console.log(currentMove);
+        console.log(currentMove);
 
         applyMove(piece, currentMove);
       },
@@ -357,21 +411,21 @@ async function applyMove(piece, move) {
   let posToOccupy = board.contents[move.to].occupied.length + 1;
   let [x, y] = getPieceCoords(move.to, posToOccupy);
 
-  // console.log(
-  //   'Before',
-  //   '\tOnTheMove: ' + board.onTheMove,
-  //   '\tAt ' + move.from + ': ' + board.contents[move.from].occupied,
-  //   '\tAt ' + move.to + ': ' + board.contents[move.to].occupied
-  // );
+  console.log(
+    "Before",
+    "\tOnTheMove: " + board.onTheMove,
+    "\tAt " + move.from + ": " + board.contents[move.from].occupied,
+    "\tAt " + move.to + ": " + board.contents[move.to].occupied
+  );
 
   board.movePiece(activePlayer, move.from, move.to);
 
-  // console.log(
-  //   'After',
-  //   '\tOnTheMove: ' + board.onTheMove,
-  //   '\tAt ' + move.from + ': ' + board.contents[move.from].occupied,
-  //   '\tAt ' + move.to + ': ' + board.contents[move.to].occupied
-  // );
+  console.log(
+    "After",
+    "\tOnTheMove: " + board.onTheMove,
+    "\tAt " + move.from + ": " + board.contents[move.from].occupied,
+    "\tAt " + move.to + ": " + board.contents[move.to].occupied
+  );
 
   board.updatePointOccupation(move.to);
   await animateMovePiece(piece, x, y, 0.5);
@@ -721,3 +775,10 @@ function isPieceMovable(piece, pt, pos) {
 
   return true;
 }
+
+// window.addEventListener("click", () => {
+//   pieces.forEach((current) => {
+//     board.resetPiecesPosition(current);
+//   });
+//   startGame();
+// });
