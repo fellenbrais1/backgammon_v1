@@ -1149,6 +1149,8 @@ function forfeitMessage() {
   chatHTML2 = `<p class='chat_entry_d'><strong>${opponentName}</strong> wins the game!</p>`;
   addGameNotification(chatHTML);
   addGameNotification(chatHTML2);
+  sendMessageToIframe({ type: "forfeitMessage", data: chatHTML });
+  sendMessageToIframe({ type: "forfeitMessage", data: chatHTML2 });
 }
 
 // Plays the set click sound for the webpage

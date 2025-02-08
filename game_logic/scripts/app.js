@@ -223,7 +223,7 @@ function sendMessageToWebpage(message) {
 
 function handleMessageFromParent(messageData) {
   console.log("Iframe received:", messageData);
-  let roll;
+  let roll, messageContent;
   switch (messageData.type) {
     case "startGame":
       startGame();
@@ -244,6 +244,22 @@ function handleMessageFromParent(messageData) {
         board.resetPiecesPosition(current);
       });
       console.log(`Resetting board...`);
+      break;
+    case "chatMessage":
+      messageContent = messageData.data;
+      console.log(messageContent);
+      break;
+    case "gameMessage":
+      messageContent = messageData.data;
+      console.log(messageContent);
+      break;
+    case "winMessage":
+      messageContent = messageData.data;
+      console.log(messageData);
+      break;
+    case "forfeitMessage":
+      messageContent = messageData.data;
+      console.log(messageData);
       break;
   }
 }
