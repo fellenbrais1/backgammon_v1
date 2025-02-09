@@ -135,6 +135,7 @@ const adNotification = document.querySelector(".ad_notification");
 const gameToggler = document.querySelector(".toggle_game_button");
 const cookieClearer = document.querySelector(".clear_cookie_button");
 const askJack = document.querySelector(".ask_jack_button");
+const changeTurnButton = document.querySelector(".change_turn_button");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // SOUNDS
@@ -142,6 +143,7 @@ const askJack = document.querySelector(".ask_jack_button");
 // Page sounds
 const buttonClickSound = document.getElementById("button_click_sound");
 const openingJingle = document.getElementById("opening_jingle");
+const arrowSpinning = document.getElementById("arrow_spinning");
 
 // Dice sounds
 const diceRollSound = document.getElementById("dice_roll_sound");
@@ -556,17 +558,20 @@ playerNameForm.addEventListener("keydown", (event) => {
     playClickSound();
     let userObjectHere;
     if (playerNameForm.value !== "") {
-      userObjectHere = guestUserObject;
-      const userDisplayName = playerNameForm.value;
-      userObjectHere.displayName = userDisplayName;
-      console.log(userObjectHere);
-      addPlayerDetails(1, userObjectHere);
-      step2Process();
-      return;
+      if (playerNameForm.value.length >= 3) {
+        userObjectHere = guestUserObject;
+        const userDisplayName = playerNameForm.value;
+        userObjectHere.displayName = userDisplayName;
+        console.log(userObjectHere);
+        addPlayerDetails(1, userObjectHere);
+        step2Process();
+        return;
+      } else {
+        window.alert(`Please enter a display name of at least 3 characters`);
+        return;
+      }
     } else {
-      window.alert(
-        `Please enter a display name to use temporarily or sign up or log in`
-      );
+      window.alert(`Please enter a display name to use in the game`);
       return;
     }
   }
@@ -575,6 +580,7 @@ playerNameForm.addEventListener("keydown", (event) => {
 gameStartButtonChallenge.addEventListener("click", () => {
   playClickSound();
   if (buttonGamestartOpponent.textContent !== "") {
+    gameStartResetButton.classList.add("no_pointer_events");
     buttonGamestartOpponent.classList.remove("focus_element");
     gameStartButtonChallenge.classList.remove("focus_element");
     gameStartButtonChallenge.classList.add("activated_button");
@@ -589,10 +595,10 @@ gameStartButtonChallenge.addEventListener("click", () => {
       challengeSection.style.backgroundColor = "green";
       challengeXButton.classList.add("hidden");
       buttonChallengeCancel.classList.add("hidden");
-      setTimeout(() => {
-        challengeSection.classList.add("no_pointer_events");
-        challengeSection.classList.remove("show");
-      }, 2000);
+    }, 2000);
+    setTimeout(() => {
+      challengeSection.classList.add("no_pointer_events");
+      challengeSection.classList.remove("show");
       step3Process();
     }, 4000);
   } else {
@@ -819,6 +825,10 @@ cookieClearer.addEventListener("click", () => {
   location.reload();
 });
 
+changeTurnButton.addEventListener("click", () => {
+  changeTurn();
+});
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
 
@@ -861,7 +871,7 @@ function sendMessageToIframe(message) {
 function showMain() {
   setTimeout(() => {
     gameBoard.classList.add("show");
-    greyOverlay.classList.add("show");
+    // greyOverlay.classList.add("show");
   }, 1000);
   setTimeout(() => {
     gamestartBox.classList.add("show");
@@ -1774,23 +1784,78 @@ function step3Process() {
     openingJingle.play();
     helperBox.classList.remove("show");
     helperBox.classList.add("removed");
+    chatSection.classList.add("scroll_on");
+    adNotification.classList.add("show");
     setTimeout(() => {
-      chatSection.classList.add("scroll_on");
-      adNotification.classList.add("show");
       imbedGame.classList.add("show");
       imbedGame.classList.remove("hidden");
       imbedGame.classList.remove("no_pointer_events");
-      setTimeout(() => {
-        sendMessageToIframe({ type: "startGame", data: "none" });
-      }, 1000);
-      const displayName = playerNameForm.value;
-      const chatHTML = `<p class='chat_entry_c disposable_message'>Welcome <strong>${displayName}!</strong></p>`;
-      postChatMessage(chatHTML, "afterbegin");
-      playerArrow.classList.add("show");
-      spinAnimation();
-      playerArrow.classList.remove("arrow_rotate");
     }, 1000);
+    setTimeout(() => {
+      sendMessageToIframe({ type: "startGame", data: "none" });
+    }, 1000);
+    const displayName = playerNameForm.value;
+    const chatHTML = `<p class='chat_entry_c disposable_message'>Welcome <strong>${displayName}!</strong></p>`;
+    postChatMessage(chatHTML, "afterbegin");
+    setTimeout(() => {
+      chooseFirstPlayer();
+    }, 4000);
   }
+}
+
+let currentPlayerTurn = 0;
+
+function assignPlayers() {
+  const result = Math.round(Math.random()) + 1;
+  return result;
+}
+
+function chooseFirstPlayer() {
+  playerArrow.classList.add("show");
+  playerNumberHere = assignPlayers();
+  arrowSpinning.play();
+  spinAnimation();
+  currentPlayerTurn = playerNumberHere === 1 ? 1 : 2;
+  setTimeout(() => {
+    applyTurnStyling();
+  }, 3500);
+}
+
+function applyTurnStyling() {
+  let chatHTML, displayName;
+  if (currentPlayerTurn === 1) {
+    console.log(`Current user is player 1`);
+    playerArrow.classList.remove("arrow_rotate");
+    displayName = getUserDisplayName();
+    if (firstTurn === true) {
+      chatHTML = `<p class='chat_entry_c'><strong>${displayName}</strong> rolls to see who goes first!</p>`;
+    } else {
+      chatHTML = `<p class='chat_entry_c'><strong>${displayName}'s</strong> turn!</p>`;
+    }
+    addGameNotification(chatHTML);
+    displayLatestMessage();
+    player1NameSection.classList.add("focus_element_thick");
+    player2NameSection.classList.remove("focus_element_thick");
+  } else if (currentPlayerTurn === 2) {
+    playerArrow.classList.add("arrow_rotate");
+    console.log(`Other player is player 1`);
+    displayName = getOpponentName();
+    if (firstTurn === true) {
+      chatHTML = `<p class='chat_entry_d'><strong>${displayName}</strong> rolls to see who goes first!</p>`;
+    } else {
+      chatHTML = `<p class='chat_entry_d'><strong>${displayName}'s</strong> turn!</p>`;
+    }
+    addGameNotification(chatHTML);
+    displayLatestMessage();
+    player1NameSection.classList.remove("focus_element_thick");
+    player2NameSection.classList.add("focus_element_thick");
+    currentPlayerTurn = 2;
+  }
+}
+
+function changeTurn() {
+  currentPlayerTurn = currentPlayerTurn === 1 ? 2 : 1;
+  applyTurnStyling();
 }
 
 // Changes the content and position of the helper box during different stages of the game start process
@@ -1831,7 +1896,7 @@ function resetSite() {
   resetSiteAddNoPointerEvents.forEach((current) => {
     current.classList.add("no_pointer_events");
   });
-  chatDisplay.innerHTML = `<p class="chat_entry_d">Start chatting!</p>`;
+  chatDisplay.innerHTML = ``;
   changeHelper(1);
   buttonGamestartOpponent.textContent = "";
   greyOutButtons.forEach((current) => {

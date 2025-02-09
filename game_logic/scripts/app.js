@@ -9,9 +9,12 @@ const pieces = document.querySelectorAll(".piece");
 
 // let region, point;
 
-// SOUND
+// SOUNDS
 const piecesDeal = document.getElementById("pieces_deal");
+const piecePickup = document.getElementById("piece_pickup");
+const piecePutdown = document.getElementById("piece_putdown");
 
+// BOARD ELEMENTS
 const boardElement = document.getElementById("board");
 const boardLeftOffset = boardElement.getBoundingClientRect().left;
 const boardTopOffset = boardElement.getBoundingClientRect().top;
@@ -25,10 +28,18 @@ console.log(
 let gameState = "start";
 let firstTurn = true;
 
+let player1, player2;
+
 boardElement.addEventListener("click", () => {
   const result = assignPlayers();
   console.log(result);
 });
+
+let gamePlayers;
+
+// function getGamePlayers() {
+//   const playerA =
+// }
 
 function assignPlayers() {
   const result = Math.round(Math.random()) + 1;
@@ -48,16 +59,27 @@ function changeGameState(state) {
       gameState = "firstTurn player2";
       activePlayer = activePlayer === "w" ? "r" : "w";
       break;
-    case "turn player1":
+    case "turn player1 roll":
       gameState = "turn player1";
       activePlayer = activePlayer === "w" ? "r" : "w";
       break;
-    case "turn player2":
+    case "turn player1 postroll":
+      gameState = "turn player1 move";
+      activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "turn player2 roll":
       gameState = "turn player2";
       activePlayer = activePlayer === "w" ? "r" : "w";
       break;
-    case "end":
-      gameState = "end";
+    case "turn player2 postroll":
+      gameState = "turn player1 move";
+      activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "end win":
+      gameState = "end win";
+      break;
+    case "end forfeit":
+      gameState = "end forfeit";
       break;
   }
   const gameStateMessage = { type: "gameState", data: gameState };
@@ -278,6 +300,7 @@ function startGame() {
   piecesDeal.play();
   board.resetBoard();
   drawBoard();
+  assignPlayers();
 }
 
 // Install event listeners on each piece
@@ -286,6 +309,7 @@ pieces.forEach((piece) => {
     // const type = piece.dataset.type;
 
     // which piece?
+    piecePickup.play();
     const x = piece.offsetLeft + PIECE_RADIUS;
     const y = piece.offsetTop + PIECE_RADIUS;
     console.log(x, y);
@@ -336,6 +360,7 @@ pieces.forEach((piece) => {
     piece.addEventListener(
       "mouseup",
       (event) => {
+        piecePutdown.play();
         console.log("startX = " + startX + ", startY = " + startY);
         document.removeEventListener("mousemove", onMouseMove);
         piece.style.zIndex = "";
