@@ -290,6 +290,16 @@ html {
   transition: opacity 2s ease-in-out;
 }
 
+/* PLAYER TURN ARROW */
+.player_arrow {
+  position: absolute;
+  top: 8.2%;
+  left: 50%;
+  transform: translateX(-50%) rotate(0deg);
+  transition: rotate 2s ease-in-out;
+  opacity: 0;
+}
+
 /* PLAYER NAME DISPLAY SECTIONS */
 .name_section {
   display: flex;
@@ -1239,6 +1249,24 @@ html {
 .grey_button {
   filter: grayscale(50%);
   pointer-events: none;
+}
+
+.spinning_arrow {
+  animation: spin 0.25s linear forwards;
+  animation-iteration-count: 14;
+}
+
+@keyframes spin {
+  from {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+.arrow_rotate {
+  transform: rotate(180deg);
 }
 
 /* CODE END */

@@ -47,6 +47,9 @@ const buttonChallengeCancel = document.querySelector(
   ".challenge_button_cancel"
 );
 
+// Player arrow indicator elements
+const playerArrow = document.querySelector(".player_arrow");
+
 // Player 1 section elements
 const player1NameSection = document.querySelector(".name_section.player1");
 const player1Portait = document.querySelector(".player_portrait1");
@@ -530,7 +533,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("load", () => {
   showMain();
-  setInterval(imgAdCycler, 10000);
+  setInterval(imgAdCycler, 15000);
 });
 
 // GAMESTART LISTENERS
@@ -1099,6 +1102,7 @@ function getTimeStamp() {
 // Captures the users display name or 'Guest' if one is not set and returns it
 // Called by startGameMessages(), createChatMessage()
 function getUserDisplayName() {
+  console.log(playerNameForm.value);
   const displayName = playerNameForm.value;
   return displayName;
 }
@@ -1161,7 +1165,7 @@ function playClickSound() {
 
 // Displays information messages in the chatbox when starting a new game
 // Called by displayFunBoard(), displayProBoard()
-function startGameMessages(mode, userDisplayName, opponentName) {
+function startGameMessages(mode, opponentName) {
   let chatHTML, chatHTML2;
   if (mode === "fun") {
     chatHTML = `<p class='chat_entry_c'>Starting a fun mode game.</p>`;
@@ -1461,15 +1465,9 @@ function cookieCheck(cookieName) {
     [userIP, userUsername, userPassword, userDisplayName] =
       readCookie(cookieName);
     console.log(`User has previously enabled cookies!`);
-    if (userUsername !== "Guest" && userPassword !== "") {
-      // userLogin(userUsername, userPassword);
-    }
   } else {
     setTimeout(() => {
       showCookieBar();
-      const displayName = getUserDisplayName();
-      const chatHTML = `<p class='chat_entry_c disposable_message'>Welcome <strong>${displayName}!</strong></p>`;
-      postChatMessage(chatHTML, "afterbegin");
     }, 3000);
   }
 }
@@ -1772,7 +1770,7 @@ function step3Process() {
     opponentObject.displayName = buttonGamestartOpponent.textContent;
     const opponentName = opponentObject.displayName;
     addPlayerDetails(2, opponentObject);
-    startGameMessages("fun", userDisplayName, opponentName);
+    startGameMessages("fun", opponentName);
     openingJingle.play();
     helperBox.classList.remove("show");
     helperBox.classList.add("removed");
@@ -1785,6 +1783,12 @@ function step3Process() {
       setTimeout(() => {
         sendMessageToIframe({ type: "startGame", data: "none" });
       }, 1000);
+      const displayName = playerNameForm.value;
+      const chatHTML = `<p class='chat_entry_c disposable_message'>Welcome <strong>${displayName}!</strong></p>`;
+      postChatMessage(chatHTML, "afterbegin");
+      playerArrow.classList.add("show");
+      spinAnimation();
+      playerArrow.classList.remove("arrow_rotate");
     }, 1000);
   }
 }
@@ -1879,4 +1883,78 @@ function resetDice() {
   diceFace2.style.opacity = 0;
   diceRollResult.textContent = 6;
   firstTurn = true;
+}
+
+let player1Section, player2Section;
+let gameState = "setup";
+let activePlayer = "w";
+let playerNumberHere = 1;
+
+function assignPlayersSectionClasses(playerNumberHere) {
+  if (playerNumberHere === 1) {
+    player1Section = player1NameSection;
+    player2Section = player2NameSection;
+  } else {
+    player1Section = player2NameSection;
+    player2Section = player1NameSection;
+  }
+  return;
+}
+
+function changeGameState(state) {
+  switch (state) {
+    case "setup":
+      gameState = "setup";
+      break;
+    case "firstTurn player1":
+      gameState = "firstTurn player1";
+      if (playerNumberHere === 1) {
+        player1Section.classList.add("focus_element_thick");
+        player2Section.classList.remove("focus_element_thick");
+        diceSection.classList.add("focus_element_thick");
+      } else {
+        player2Section.classList.add("focus_element_thick");
+        player1Section.classList.remove("focus_element_thick");
+        diceSection.classList.remove("focus_element_thick");
+      }
+      // activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "firstTurn player2":
+      gameState = "firstTurn player2";
+      player1NameSection.classList.remove("focus_element_thick");
+      player2NameSection.classList.add("focus_element_thick");
+      // activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "turn player1 predice":
+      gameState = "turn player1 predice";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "turn player1 postdice":
+      gameBoard.classList.add("focus_element_thick");
+      diceSection.classList.remove("focus_element_thick");
+      gameState = "turn player1 predice";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "turn player2 predice":
+      gameState = "turn player2";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "turn player2 postdice":
+      gameState = "turn player2";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "end":
+      gameState = "end";
+      break;
+  }
+  // const gameStateMessage = { type: "gameState", data: gameState };
+  // sendMessageToIframe(gameStateMessage);
+}
+
+function spinAnimation() {
+  playerArrow.classList.add("spinning_arrow");
+  setTimeout(() => {
+    assignPlayersSectionClasses(playerNumberHere);
+    playerArrow.classList.remove("spinning_arrow");
+  }, 3500);
 }

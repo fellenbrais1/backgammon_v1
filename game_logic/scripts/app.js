@@ -25,6 +25,16 @@ console.log(
 let gameState = "start";
 let firstTurn = true;
 
+boardElement.addEventListener("click", () => {
+  const result = assignPlayers();
+  console.log(result);
+});
+
+function assignPlayers() {
+  const result = Math.round(Math.random()) + 1;
+  return result;
+}
+
 function changeGameState(state) {
   switch (state) {
     case "setup":

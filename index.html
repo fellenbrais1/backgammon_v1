@@ -31,25 +31,24 @@
   </head>
   <body>
     <!-- MAIN PAGE ELEMENTS -->
-    <div id="overlay">
-    </div>
+    <div id="overlay"></div>
     <div class="pagebox">
       <!-- MAIN GAMEBOX -->
       <div class="main_display">
         <!-- GAME BOARD -->
-          <iframe
+        <iframe
           id="imbed_game"
           class="hidden no_pointer_events"
           title="Backgammon Game"
           src="game_logic/index.html"
           style="width: 100%; border: none; width: 100%"
-          ></iframe>
+        ></iframe>
         <div class="intro_display">
           <p class="intro_text">Backgammon</p>
           <img
-          class="intro_image focus_element_thick"
-          src="img/bagammnon.png"
-          alt="Backgammon Logo"
+            class="intro_image focus_element_thick"
+            src="img/bagammnon.png"
+            alt="Backgammon Logo"
           />
         </div>
         <!-- GAMESTART BLOCK -->
@@ -90,10 +89,7 @@
               </svg>
             </p>
           </div>
-          <p
-            class="gamestart_reset_button x_button"
-            title="Restart"
-          >
+          <p class="gamestart_reset_button x_button" title="Restart">
             <svg
               fill="#FFFFFF"
               width="20px"
@@ -130,6 +126,30 @@
           </svg>
         </div>
       </div>
+      <!-- PLAYER ARROW SECTION -->
+      <svg
+        class="player_arrow"
+        height="60px"
+        width="60px"
+        version="1.1"
+        id="_x32_"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 0 512 512"
+        xml:space="preserve"
+      >
+        <style type="text/css">
+          .st0 {
+            fill: rgb(255, 191, 0);
+          }
+        </style>
+        <g>
+          <polygon
+            class="st0"
+            points="316.508,153.598 316.508,18.616 0,256 316.508,493.384 316.508,358.402 512,358.402 512,153.598 	"
+          />
+        </g>
+      </svg>
       <!-- NAME PLAYER 1 SECTION -->
       <section class="name_section player1">
         <img
@@ -194,7 +214,6 @@
           <p class="challenge_text_big">CHALLENGE SENT</p>
           <p class="challenge_text">Waiting for a response...</p>
           <p class="challenge_button_cancel" title="Cancel Challenge">Cancel</p>
-          </div>
           <p class="challenge_x_button x_button" title="Cancel Challenge">X</p>
         </div>
       </section>
@@ -270,9 +289,7 @@
           <strong>CURRENTLY ACTIVE</strong>
           <div class="players_display players_currently_active"></div>
         </div>
-        <div class="players_x_button x_button no_pointer_events">
-          X
-        </div>
+        <div class="players_x_button x_button no_pointer_events">X</div>
       </section>
       <!-- CHAT SECTION -->
       <section class="chat_section">
