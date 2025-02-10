@@ -244,13 +244,18 @@ const board = {
   },
 };
 
+// Global game object
+const game = {
+  turn: "w",
+};
+
 window.addEventListener("message", (event) => {
   const receivedMessage = event.data;
   handleMessageFromParent(receivedMessage);
 });
 
 function sendMessageToWebpage(message) {
-  window.parent.postMessage(JSON.stringify(message), "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
+  window.parent.postMessage(JSON.stringify(message), "*"); // '*' means any origin can receive. For production, specify the exact origin of the iframe.
 }
 
 function handleMessageFromParent(messageData) {

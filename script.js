@@ -13,7 +13,7 @@ const introDisplay = document.querySelector(".intro_display");
 
 // Game start elements
 const gamestartBox = document.querySelector(".gamestart_block");
-const greyOverlay = document.querySelector(".grey_overlay");
+// const greyOverlay = document.querySelector(".grey_overlay");
 const helperBox = document.querySelector(".helper_div");
 const gameStartResetButton = document.querySelector(".gamestart_reset_button");
 const buttonGamestartFun = document.querySelector(".gamestart_button_fun");
@@ -45,6 +45,17 @@ const challengeXButton = document.querySelector(".challenge_x_button");
 const challengeInformation = document.querySelector(".challenge_text");
 const buttonChallengeCancel = document.querySelector(
   ".challenge_button_cancel"
+);
+
+// Challenge received section elements
+const challengeReceivedSection = document.querySelector(
+  ".challenge_received_section"
+);
+const challengeReceivedButtonAccept = document.querySelector(
+  ".challenge_received_button_accept"
+);
+const challengeReceivedButtonDecline = document.querySelector(
+  ".challenge_received_button_decline"
 );
 
 // Player arrow indicator elements
@@ -132,10 +143,13 @@ const adSection = document.querySelector(".adbox");
 const adNotification = document.querySelector(".ad_notification");
 
 // Debug elements
-const gameToggler = document.querySelector(".toggle_game_button");
+// const gameToggler = document.querySelector(".toggle_game_button");
 const cookieClearer = document.querySelector(".clear_cookie_button");
 const askJack = document.querySelector(".ask_jack_button");
 const changeTurnButton = document.querySelector(".change_turn_button");
+const simulateChallengeButton = document.querySelector(
+  ".simulate_challenge_button"
+);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // SOUNDS
@@ -629,6 +643,20 @@ buttonChallengeCancel.addEventListener("click", () => {
   }, 2000);
 });
 
+// CHALLENGE RECEIVED SECTION LISTENERS
+challengeReceivedButtonAccept.addEventListener("click", () => {
+  sendMessageToIframe({ type: "challengeAccepted", data: "none" });
+  step3Process();
+  challengeReceivedSection.classList.remove("show");
+  challengeReceivedSection.classList.add("no_pointer_events");
+});
+
+challengeReceivedButtonDecline.addEventListener("click", () => {
+  sendMessageToIframe({ type: "challengeDeclined", data: "none" });
+  challengeReceivedSection.classList.remove("show");
+  challengeReceivedSection.classList.add("no_pointer_events");
+});
+
 // FORFEIT SECTION LISTENERS
 forfeitButton.addEventListener("click", () => {
   playClickSound();
@@ -827,6 +855,14 @@ cookieClearer.addEventListener("click", () => {
 
 changeTurnButton.addEventListener("click", () => {
   changeTurn();
+});
+
+simulateChallengeButton.addEventListener("click", () => {
+  gamestartBox.classList.add("no_pointer_events");
+  gamestartBox.classList.remove("focus_element_thick");
+  challengeReceivedSection.classList.add("show");
+  challengeReceivedSection.classList.add("focus_element_thick");
+  challengeReceivedSection.classList.remove("no_pointer_events");
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

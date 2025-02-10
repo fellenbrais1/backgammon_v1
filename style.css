@@ -450,6 +450,81 @@ html {
   background-color: var(--active_button_gold);
 }
 
+/* CHALLENGE RECEIVED SECTION */
+.challenge_received_section {
+  position: absolute;
+  top: 28%;
+  left: 35%;
+  height: 250px;
+  width: 600px;
+  z-index: 9;
+  padding-top: 24px;
+  border: solid 2px white;
+  border-radius: 25px;
+  background-color: purple;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  cursor: default;
+}
+
+.challenge_received_block {
+  display: grid;
+  grid-template-rows: 50px 40px auto;
+  row-gap: 16px;
+}
+
+.challenge_received_text {
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+}
+
+.challenge_received_text_big {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.challenge_received_text_small {
+  font-size: 16px;
+}
+
+.challenge_received_button_div {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 18px;
+  width: 60%;
+  margin-left: 35%;
+}
+
+.challenge_received_button_accept,
+.challenge_received_button_decline {
+  height: 60px;
+  width: 140px;
+  padding-top: 10px;
+  border: solid 2px white;
+  border-radius: 999px;
+  background-color: lightgreen;
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.challenge_received_button_decline {
+  background-color: var(--youtube_red);
+}
+
+.challenge_received_button_accept:hover,
+.challenge_received_button_decline:hover {
+  box-shadow: 0px 0px 20px white;
+}
+
+.challenge_recieved_button_accept:active,
+.challenge_received_button_decline:active {
+  background-color: var(--active_button_gold);
+}
+
 /* FORFEIT SECTION */
 .forfeit_section {
   position: absolute;
@@ -1171,9 +1246,9 @@ html {
 .toggle_ads_button,
 .clear_cookie_button,
 .ask_jack_button,
-.change_turn_button {
+.change_turn_button,
+.simulate_challenge_button {
   position: absolute;
-  top: 6%;
   left: 5%;
   cursor: pointer;
 }
@@ -1186,8 +1261,16 @@ html {
   top: 3.5%;
 }
 
+.ask_jack_button {
+  top: 6%;
+}
+
 .change_turn_button {
   top: 8.5%;
+}
+
+.simulate_challenge_button {
+  top: 11%;
 }
 
 /* PAGE RESET CLASSES */
