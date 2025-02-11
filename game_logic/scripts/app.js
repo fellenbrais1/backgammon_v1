@@ -18,12 +18,12 @@ const piecePutdown = document.getElementById("piece_putdown");
 const boardElement = document.getElementById("board");
 const boardLeftOffset = boardElement.getBoundingClientRect().left;
 const boardTopOffset = boardElement.getBoundingClientRect().top;
-console.log(
-  "boardLeftOffset = ",
-  boardLeftOffset,
-  ", boardTopOffset = ",
-  boardTopOffset
-);
+// console.log(
+//   "boardLeftOffset = ",
+//   boardLeftOffset,
+//   ", boardTopOffset = ",
+//   boardTopOffset
+// );
 
 let gameState = "start";
 let firstTurn = true;
@@ -51,29 +51,32 @@ function changeGameState(state) {
     case "setup":
       gameState = "setup";
       break;
-    case "firstTurn player1":
-      gameState = "firstTurn player1";
-      activePlayer = activePlayer === "w" ? "r" : "w";
+    case "playerW firstTurn":
+      gameState = "playerW firstTurn";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
       break;
-    case "firstTurn player2":
-      gameState = "firstTurn player2";
-      activePlayer = activePlayer === "w" ? "r" : "w";
+    case "playerR firstTurn":
+      gameState = "playerR firstTurn";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
       break;
-    case "turn player1 roll":
-      gameState = "turn player1";
-      activePlayer = activePlayer === "w" ? "r" : "w";
+    case "chooseFirstPlayer":
       break;
-    case "turn player1 postroll":
-      gameState = "turn player1 move";
-      activePlayer = activePlayer === "w" ? "r" : "w";
+    // const diceRolls =
+    case "playerW roll":
+      gameState = "playerW roll";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
       break;
-    case "turn player2 roll":
-      gameState = "turn player2";
-      activePlayer = activePlayer === "w" ? "r" : "w";
+    case "playerW move":
+      gameState = "playerW move";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
       break;
-    case "turn player2 postroll":
-      gameState = "turn player1 move";
-      activePlayer = activePlayer === "w" ? "r" : "w";
+    case "playerR roll":
+      gameState = "playerR roll";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
+      break;
+    case "playerR move":
+      gameState = "playerR move";
+      // activePlayer = activePlayer === "w" ? "r" : "w";
       break;
     case "end win":
       gameState = "end win";
@@ -258,22 +261,52 @@ function sendMessageToWebpage(message) {
   window.parent.postMessage(JSON.stringify(message), "*"); // '*' means any origin can receive. For production, specify the exact origin of the iframe.
 }
 
-function handleMessageFromParent(messageData) {
-  console.log("Iframe received:", messageData);
-  let roll, messageContent;
-  switch (messageData.type) {
+function handleMessageFromParent(message) {
+  console.log("Iframe received:", message);
+  let roll, messageContent, firstTurnRollResults;
+  switch (message.type) {
     case "startGame":
       startGame();
+      break;
+    case "changeTurn":
+      changeGameState(message.data);
       break;
     case "rollOnce":
       roll = rollOnce();
       console.log(roll);
       sendMessageToWebpage({ type: "1DieResult", data: roll });
+      changeGameState("playerR firstTurn");
       break;
     case "rollTwice":
       roll = rollTwice();
       console.log(roll);
       sendMessageToWebpage({ type: "2DiceResult", data: roll });
+      break;
+    case "chooseFirstPlayer":
+      firstTurnRollResults = message.data;
+      console.log(firstTurnRollResults);
+      console.log(firstTurnRollResults[0]);
+      console.log(firstTurnRollResults[1]);
+      if (firstTurnRollResults[0] === firstTurnRollResults[1]) {
+        sendMessageToWebpage({ type: "rollResultDraw", data: "none" });
+      }
+      if (firstTurnRollResults[0] > firstTurnRollResults[1]) {
+        console.log(`W goes first`);
+        changeGameState("playerW roll");
+        sendMessageToWebpage({
+          type: "displayNotification",
+          data: "W goes first",
+        });
+        sendMessageToWebpage({ type: "gameState", data: "playerW roll" });
+      } else if (firstTurnRollResults[0] < firstTurnRollResults[1]) {
+        console.log(`R goes first`);
+        changeGameState("playerR roll");
+        sendMessageToWebpage({
+          type: "displayNotification",
+          data: "R goes first",
+        });
+        sendMessageToWebpage({ type: "gameState", data: "playerR roll" });
+      }
       break;
     case "resetBoard":
       board.resetBoard();
@@ -283,20 +316,20 @@ function handleMessageFromParent(messageData) {
       console.log(`Resetting board...`);
       break;
     case "chatMessage":
-      messageContent = messageData.data;
+      messageContent = message.data;
       console.log(messageContent);
       break;
     case "gameMessage":
-      messageContent = messageData.data;
+      messageContent = message.data;
       console.log(messageContent);
       break;
     case "winMessage":
-      messageContent = messageData.data;
-      console.log(messageData);
+      messageContent = message.data;
+      console.log(message);
       break;
     case "forfeitMessage":
-      messageContent = messageData.data;
-      console.log(messageData);
+      messageContent = message.data;
+      console.log(message);
       break;
   }
 }

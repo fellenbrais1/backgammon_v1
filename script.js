@@ -41,7 +41,8 @@ const buttonForfeitNo = document.querySelector(".forfeit_button_no");
 
 // Challenge section elements
 const challengeSection = document.querySelector(".challenge_section");
-const challengeXButton = document.querySelector(".challenge_x_button");
+const challengeTitle = document.querySelector(".challenge_text_big");
+const challengeNames = document.querySelector(".challenge_text_names");
 const challengeInformation = document.querySelector(".challenge_text");
 const buttonChallengeCancel = document.querySelector(
   ".challenge_button_cancel"
@@ -50,6 +51,9 @@ const buttonChallengeCancel = document.querySelector(
 // Challenge received section elements
 const challengeReceivedSection = document.querySelector(
   ".challenge_received_section"
+);
+const challengeReceivedText = document.querySelector(
+  ".challenge_received_text"
 );
 const challengeReceivedButtonAccept = document.querySelector(
   ".challenge_received_button_accept"
@@ -357,7 +361,7 @@ let guestUserObject = {
 };
 
 // Opponent user object
-let opponentObject = {
+let opponentObjectHere = {
   username: "Guest",
   password: "Guest",
   displayName: "Guest",
@@ -539,6 +543,23 @@ let currentAdNumber = 0;
 // GAME LOGIC VARIABLES
 let firstTurn = true;
 
+// CHALLENGE SECTION VARIABLES
+let challengeCancel = false;
+
+let playerObjectHere;
+let challengeAccepted;
+let allowSimulatedChallenge = false;
+
+let turnOneRolls = [];
+
+let currentPlayerTurn = "w";
+
+let player1Section, player2Section;
+let gameState = "setup";
+let playerColourHere = "w";
+
+let playerWName, playerRName;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
 
@@ -570,14 +591,13 @@ playerNameForm.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
     playClickSound();
-    let userObjectHere;
     if (playerNameForm.value !== "") {
       if (playerNameForm.value.length >= 3) {
-        userObjectHere = guestUserObject;
+        playerObjectHere = guestUserObject;
         const userDisplayName = playerNameForm.value;
-        userObjectHere.displayName = userDisplayName;
-        console.log(userObjectHere);
-        addPlayerDetails(1, userObjectHere);
+        playerObjectHere.displayName = userDisplayName;
+        console.log(`Player object: ${JSON.stringify(playerObjectHere)}`);
+        addPlayerDetails(1, playerObjectHere);
         step2Process();
         return;
       } else {
@@ -593,28 +613,28 @@ playerNameForm.addEventListener("keydown", (event) => {
 
 gameStartButtonChallenge.addEventListener("click", () => {
   playClickSound();
+  challengeCancel = false;
   if (buttonGamestartOpponent.textContent !== "") {
+    const playerName = playerNameForm.value;
+    const opponentName = buttonGamestartOpponent.textContent;
+    opponentObjectHere.displayName = opponentName;
+    const challengePlayersMessage = `<p><u>${playerName}</u> challenging <u>${opponentName}</u></p>`;
+    challengeTitle.textContent = `CHALLENGE SENT`;
     gameStartResetButton.classList.add("no_pointer_events");
     buttonGamestartOpponent.classList.remove("focus_element");
     gameStartButtonChallenge.classList.remove("focus_element");
     gameStartButtonChallenge.classList.add("activated_button");
+    challengeNames.innerHTML = challengePlayersMessage;
     challengeInformation.textContent = "Waiting for a response...";
     challengeSection.style.backgroundColor = "var(--youtube_red)";
-    challengeXButton.classList.remove("hidden");
     buttonChallengeCancel.classList.remove("hidden");
     challengeSection.classList.add("show");
     challengeSection.classList.remove("no_pointer_events");
+    sendMessageToOpponent({ type: "challengeSent", data: playerObjectHere });
     setTimeout(() => {
-      challengeInformation.textContent = "Challenge accepted, starting game...";
-      challengeSection.style.backgroundColor = "green";
-      challengeXButton.classList.add("hidden");
-      buttonChallengeCancel.classList.add("hidden");
-    }, 2000);
-    setTimeout(() => {
-      challengeSection.classList.add("no_pointer_events");
-      challengeSection.classList.remove("show");
-      step3Process();
-    }, 4000);
+      // TODO Replace with real logic when ready
+      simulateChallengeAcceptance();
+    }, 5000);
   } else {
     window.alert(
       `Please select an opponent by clicking on their name on the left panel, then press the challenge button`
@@ -623,19 +643,14 @@ gameStartButtonChallenge.addEventListener("click", () => {
 });
 
 // CHALLENGE SECTION LISTENERS
-challengeXButton.addEventListener("click", () => {
-  playClickSound();
-  challengeInformation.textContent = "Cancelling challenge...";
-  setTimeout(() => {
-    challengeSection.classList.add("no_pointer_events");
-    gameStartButtonChallenge.classList.remove("activated_button");
-    challengeSection.classList.remove("show");
-  }, 2000);
-});
-
 buttonChallengeCancel.addEventListener("click", () => {
   playClickSound();
+  challengeCancel = true;
   challengeInformation.textContent = "Cancelling challenge...";
+  sendMessageToOpponent({
+    type: "challengeRejected",
+    data: opponentObjectHere,
+  });
   setTimeout(() => {
     challengeSection.classList.add("no_pointer_events");
     gameStartButtonChallenge.classList.remove("activated_button");
@@ -645,16 +660,21 @@ buttonChallengeCancel.addEventListener("click", () => {
 
 // CHALLENGE RECEIVED SECTION LISTENERS
 challengeReceivedButtonAccept.addEventListener("click", () => {
-  sendMessageToIframe({ type: "challengeAccepted", data: "none" });
+  sendMessageToOpponent({
+    type: "challengeAccepted",
+    data: playerObjectHere,
+  });
   step3Process();
   challengeReceivedSection.classList.remove("show");
   challengeReceivedSection.classList.add("no_pointer_events");
 });
 
 challengeReceivedButtonDecline.addEventListener("click", () => {
-  sendMessageToIframe({ type: "challengeDeclined", data: "none" });
+  sendMessageToOpponent({ type: "challengeDeclined", data: playerObjectHere });
   challengeReceivedSection.classList.remove("show");
   challengeReceivedSection.classList.add("no_pointer_events");
+  gamestartBox.classList.remove("no_pointer_events");
+  gamestartBox.classList.add("focus_element_thick");
 });
 
 // FORFEIT SECTION LISTENERS
@@ -858,11 +878,13 @@ changeTurnButton.addEventListener("click", () => {
 });
 
 simulateChallengeButton.addEventListener("click", () => {
-  gamestartBox.classList.add("no_pointer_events");
-  gamestartBox.classList.remove("focus_element_thick");
-  challengeReceivedSection.classList.add("show");
-  challengeReceivedSection.classList.add("focus_element_thick");
-  challengeReceivedSection.classList.remove("no_pointer_events");
+  if (allowSimulatedChallenge === true) {
+    challengeReceivedProcessing();
+  } else {
+    window.alert(
+      `A valid player displayname needs to be specified before a challenge can be specified`
+    );
+  }
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -879,17 +901,42 @@ window.addEventListener("message", (event) => {
 
 // Triggers various functions based on the content of a message received from the iframe object
 // Called by an eventListener on the window object
-function handleMessageFromIframe(messageData) {
-  console.log("Webpage received:", messageData);
-  switch (messageData.type) {
+function handleMessageFromIframe(message) {
+  console.log("Webpage received:", message);
+  let chatHTML;
+  switch (message.type) {
+    case "gameState":
+      console.log(message.data);
+      changeGameState(message.data);
+      break;
     case "1DieResult":
-      console.log(messageData.data);
-      rollOneDie(messageData.data);
+      console.log(message.data);
+      rollOneDie(message.data);
       break;
     case "2DiceResult":
-      console.log(messageData.data);
-      rollTwoDice(messageData.data);
+      console.log(message.data);
+      rollTwoDice(message.data);
       break;
+    case "rollResultDraw":
+      chatHTML = `<p class='chat_entry_c'>It's a tie, seeing who goes first...</p>`;
+      addGameNotification(chatHTML);
+      displayLatestMessage();
+      assignPlayers();
+      break;
+    case "displayNotification":
+      if (message.data === "W goes first") {
+        chatHTML = `<p class='chat_entry_c'><strong>${playerWName}</strong> goes first!</p>`;
+        addGameNotification(chatHTML);
+        displayLatestMessage();
+        currentPlayerTurn = "w";
+        applyTurnStyling();
+      } else if (message.data === "R goes first") {
+        chatHTML = `<p class='chat_entry_c'><strong>${playerRName}</strong> goes first!</p>`;
+        addGameNotification(chatHTML);
+        displayLatestMessage();
+        currentPlayerTurn = "r";
+        applyTurnStyling();
+      }
   }
 }
 
@@ -941,7 +988,7 @@ function toggleClass(pageElement, property) {
 // Gets the name of the other player for use in the chatbox display messages
 // Called by displayFunBoard(), displayProBoard()
 function getOpponentName() {
-  const opponentName = opponentObject.displayName;
+  const opponentName = opponentObjectHere.displayName;
   return opponentName;
 }
 
@@ -961,18 +1008,45 @@ function rollOneDie(result) {
   const target1 = diceFace1;
   rollingAnimation(target1);
   setTimeout(() => {
-    // const roll1 = diceRoller();
     cycleDieFaces(roll1, "set", target1);
     diceRollResult.textContent = Number(roll1);
-    // Number((diceResult = roll1));
   }, 1010);
   setTimeout(() => {
     toggleClass(diceRollResult, "dice_result_display_final");
     playDiceSound(Number(roll1));
   }, 1110);
+
+  let chatHTML;
+  if (playerColourHere === "w") {
+    if (currentPlayerTurn === "w") {
+      chatHTML = `<p class='chat_entry_d'><strong>${playerObjectHere.displayName}</strong> rolls a ${roll1}!</p>`;
+    } else if (currentPlayerTurn === "r") {
+      chatHTML = `<p class='chat_entry_d'><strong>${opponentObjectHere.displayName}</strong> rolls a ${roll1}!</p>`;
+    }
+  } else if (playerColourHere === "r") {
+    if (currentPlayerTurn === "w") {
+      chatHTML = `<p class='chat_entry_d'><strong>${opponentObjectHere.displayName}</strong> rolls a ${roll1}!</p>`;
+    } else if (currentPlayerTurn === "r") {
+      chatHTML = `<p class='chat_entry_d'><strong>${playerObjectHere.displayName}</strong> rolls a ${roll1}!</p>`;
+    }
+  }
+  console.log(currentPlayerTurn);
+  postChatMessage(chatHTML);
+  displayLatestMessage();
   setTimeout(() => {
-    turnOneEnd();
+    turnOneRolls.push(roll1);
+    if (turnOneRolls.length === 2) {
+      turnOneEnd();
+      shrinkDiceResult();
+      return;
+    }
     shrinkDiceResult();
+    sendMessageToIframe({ type: "changeTurn", data: "playerR firstTurn" });
+    const chatHTML3 = `<p class='chat_entry_c'><strong>${playerRName}'s</strong> turn!</p>`;
+    addGameNotification(chatHTML3);
+    displayLatestMessage();
+    changeTurn();
+    return;
   }, 2500);
 }
 
@@ -1148,7 +1222,7 @@ function getTimeStamp() {
 // Captures the users display name or 'Guest' if one is not set and returns it
 // Called by startGameMessages(), createChatMessage()
 function getUserDisplayName() {
-  console.log(playerNameForm.value);
+  // console.log(playerNameForm.value);
   const displayName = playerNameForm.value;
   return displayName;
 }
@@ -1204,7 +1278,7 @@ function forfeitMessage() {
 }
 
 // Plays the set click sound for the webpage
-// Called by eventHandlers on gameStartResetButton, buttonGameStartFun, playerNameForm, gameStartButtonChallenge, challengeXButton, buttonChallengeCancel, forfeitButton, forfeitXButton, buttonForfeitYes, buttonForfeitNo, playerButton, playersXButton, onlinePlayersToggleButton, freePlayersToggleButton, settingsButton, settingsXButton, rulesButton, rulesXButton, otherGamesButton, otherGamesXButton, clsButton, floatingButtonsToggle
+// Called by eventHandlers on gameStartResetButton, buttonGameStartFun, playerNameForm, gameStartButtonChallenge, buttonChallengeCancel, forfeitButton, forfeitXButton, buttonForfeitYes, buttonForfeitNo, playerButton, playersXButton, onlinePlayersToggleButton, freePlayersToggleButton, settingsButton, settingsXButton, rulesButton, rulesXButton, otherGamesButton, otherGamesXButton, clsButton, floatingButtonsToggle
 function playClickSound() {
   buttonClickSound.play();
 }
@@ -1214,12 +1288,12 @@ function playClickSound() {
 function startGameMessages(mode, opponentName) {
   let chatHTML, chatHTML2;
   if (mode === "fun") {
-    chatHTML = `<p class='chat_entry_c'>Starting a fun mode game.</p>`;
+    chatHTML = `<p class='chat_entry_d'>Starting a fun mode game.</p>`;
   } else if (mode === "pro") {
-    chatHTML = `<p class='chat_entry_c'>Starting a professional mode game.</p>`;
+    chatHTML = `<p class='chat_entry_d'>Starting a professional mode game.</p>`;
   }
   const displayName = getUserDisplayName();
-  chatHTML2 = `<p class='chat_entry_d'><strong>${displayName}</strong> is playing against <strong>${opponentName}!</strong></p>`;
+  chatHTML2 = `<p class='chat_entry_c'><strong>${displayName}</strong> is playing against <strong>${opponentName}!</strong></p>`;
   addGameNotification(chatHTML);
   addGameNotification(chatHTML2);
 }
@@ -1472,13 +1546,14 @@ function addCurrentGameClass(currentGameFlag) {
 }
 
 function addPlayerDetails(player, userObject) {
-  console.log(userObject);
   if (player === 1) {
+    console.log(`Add Player Details - Player 1: ${JSON.stringify(userObject)}`);
     player1Name.textContent = userObject.displayName;
     player1Portait.src = userObject.playerPortrait;
     player1Portait.style.backgroundColor = userObject.portraitColour;
     player1Rating.textContent = userObject.playerRating;
   } else {
+    console.log(`Add player details - Player 2: ${JSON.stringify(userObject)}`);
     player2Name.textContent = userObject.displayName;
     player2Portait.src = userObject.playerPortrait;
     player2Portait.style.backgroundColor = userObject.portraitColour;
@@ -1504,14 +1579,15 @@ function cookieCheck(cookieName) {
   const cookie = document.cookie
     .split(";")
     .find((row) => row.startsWith(`${cookieName}=`));
-  console.log(cookie);
   if (cookie) {
+    console.log(`Cookie: ${JSON.stringify(cookie)}`);
     cookiesAcceptedFlag = true;
     console.log(`COOKIE - RUNNING`);
     [userIP, userUsername, userPassword, userDisplayName] =
       readCookie(cookieName);
     console.log(`User has previously enabled cookies!`);
   } else {
+    console.log(`Cookie: No cookie`);
     setTimeout(() => {
       showCookieBar();
     }, 3000);
@@ -1726,6 +1802,8 @@ function ipTest() {
 function turnOneEnd() {
   diceFace2.style.opacity = 1;
   firstTurn = false;
+  console.log(turnOneRolls);
+  sendMessageToIframe({ type: "chooseFirstPlayer", data: turnOneRolls });
 }
 
 // Allows the diceResult element to shrink back down to its original size and style
@@ -1774,6 +1852,7 @@ function step2Process() {
     step3Elements.forEach((element) => {
       element.classList.add("show");
     });
+    allowSimulatedChallenge = true;
     changeHelper(3);
     playersSection.classList.add("show");
     playersSection.classList.add("scroll_on");
@@ -1813,9 +1892,9 @@ function step3Process() {
     forfeitButton.classList.remove("grey_button");
     settingsButton.classList.remove("grey_button");
     playersButton.classList.remove("grey_button");
-    opponentObject.displayName = buttonGamestartOpponent.textContent;
-    const opponentName = opponentObject.displayName;
-    addPlayerDetails(2, opponentObject);
+    opponentObjectHere.displayName = buttonGamestartOpponent.textContent;
+    const opponentName = opponentObjectHere.displayName;
+    addPlayerDetails(2, opponentObjectHere);
     startGameMessages("fun", opponentName);
     openingJingle.play();
     helperBox.classList.remove("show");
@@ -1831,66 +1910,82 @@ function step3Process() {
       sendMessageToIframe({ type: "startGame", data: "none" });
     }, 1000);
     const displayName = playerNameForm.value;
-    const chatHTML = `<p class='chat_entry_c disposable_message'>Welcome <strong>${displayName}!</strong></p>`;
+    const chatHTML = `<p class='chat_entry_c'>Welcome <strong>${displayName}!</strong></p>`;
     postChatMessage(chatHTML, "afterbegin");
     setTimeout(() => {
-      chooseFirstPlayer();
+      applyTurn1Styling();
+      assignPlayerColorNames();
+      const chatHTML2 = `<p class='chat_entry_d'>Roll to see who goes first!</p>`;
+      const chatHTML3 = `<p class='chat_entry_c'><strong>${playerWName}'s</strong> turn!</p>`;
+      addGameNotification(chatHTML2);
+      displayLatestMessage();
+      addGameNotification(chatHTML3);
+      displayLatestMessage();
     }, 4000);
   }
 }
 
-let currentPlayerTurn = 0;
-
 function assignPlayers() {
   const result = Math.round(Math.random()) + 1;
-  return result;
-}
-
-function chooseFirstPlayer() {
-  playerArrow.classList.add("show");
-  playerNumberHere = assignPlayers();
   arrowSpinning.play();
   spinAnimation();
-  currentPlayerTurn = playerNumberHere === 1 ? 1 : 2;
-  setTimeout(() => {
-    applyTurnStyling();
-  }, 3500);
+  currentPlayerTurn = result === 0 ? "w" : "r";
+  let chatHTML;
+  // if (playerColourHere === "w") {
+  //   playerWName = playerObjectHere.displayName;
+  //   playerRName = opponentObjectHere.displayName;
+  // } else if (playerColourHere === "r") {
+  //   playerWName = opponentObjectHere.displayName;
+  //   playerRName = playerObjectHere.displayName;
+  // }
+  switch (result) {
+    case "w":
+      changeGameState("playerW roll");
+      chatHTML = `<p class='chat_entry_c'><strong>${playerWName}</strong> goes first!</p>`;
+      addGameNotification(chatHTML);
+      displayLatestMessage();
+      break;
+    case "r":
+      changeGameState("playerR roll");
+      chatHTML = `<p class='chat_entry_c'><strong>${playerRName}</strong> goes first!</p>`;
+      addGameNotification(chatHTML);
+      displayLatestMessage();
+      break;
+  }
+  return;
+}
+
+function applyTurn1Styling() {
+  playerArrow.classList.add("show");
+  assignPlayersSectionClasses(playerColourHere);
+  applyTurnStyling();
 }
 
 function applyTurnStyling() {
-  let chatHTML, displayName;
-  if (currentPlayerTurn === 1) {
-    console.log(`Current user is player 1`);
+  if (currentPlayerTurn === "w") {
+    console.log(`Current user is player W`);
     playerArrow.classList.remove("arrow_rotate");
-    displayName = getUserDisplayName();
-    if (firstTurn === true) {
-      chatHTML = `<p class='chat_entry_c'><strong>${displayName}</strong> rolls to see who goes first!</p>`;
-    } else {
-      chatHTML = `<p class='chat_entry_c'><strong>${displayName}'s</strong> turn!</p>`;
-    }
-    addGameNotification(chatHTML);
-    displayLatestMessage();
     player1NameSection.classList.add("focus_element_thick");
     player2NameSection.classList.remove("focus_element_thick");
-  } else if (currentPlayerTurn === 2) {
+  } else if (currentPlayerTurn === "r") {
     playerArrow.classList.add("arrow_rotate");
-    console.log(`Other player is player 1`);
-    displayName = getOpponentName();
-    if (firstTurn === true) {
-      chatHTML = `<p class='chat_entry_d'><strong>${displayName}</strong> rolls to see who goes first!</p>`;
-    } else {
-      chatHTML = `<p class='chat_entry_d'><strong>${displayName}'s</strong> turn!</p>`;
-    }
-    addGameNotification(chatHTML);
-    displayLatestMessage();
+    console.log(`Other player is player R`);
     player1NameSection.classList.remove("focus_element_thick");
     player2NameSection.classList.add("focus_element_thick");
-    currentPlayerTurn = 2;
   }
 }
 
 function changeTurn() {
-  currentPlayerTurn = currentPlayerTurn === 1 ? 2 : 1;
+  currentPlayerTurn = currentPlayerTurn === "w" ? "r" : "w";
+  let displayName =
+    playerColourHere === "w"
+      ? opponentObjectHere.displayName
+      : playerObjectHere.displayName;
+  if (firstTurn === false) {
+    let chatHTML = `<p class='chat_entry_c'><strong>${displayName}'s</strong> turn!</p>`;
+    addGameNotification(chatHTML);
+    displayLatestMessage();
+  }
   applyTurnStyling();
 }
 
@@ -1986,16 +2081,11 @@ function resetDice() {
   firstTurn = true;
 }
 
-let player1Section, player2Section;
-let gameState = "setup";
-let activePlayer = "w";
-let playerNumberHere = 1;
-
-function assignPlayersSectionClasses(playerNumberHere) {
-  if (playerNumberHere === 1) {
+function assignPlayersSectionClasses(playerColourHere) {
+  if (playerColourHere === "w") {
     player1Section = player1NameSection;
     player2Section = player2NameSection;
-  } else {
+  } else if (playerColourHere === "r") {
     player1Section = player2NameSection;
     player2Section = player1NameSection;
   }
@@ -2007,55 +2097,209 @@ function changeGameState(state) {
     case "setup":
       gameState = "setup";
       break;
-    case "firstTurn player1":
-      gameState = "firstTurn player1";
-      if (playerNumberHere === 1) {
+    case "playerW firstTurn":
+      gameState = "playerW firstTurn";
+      if (playerColourHere === "w") {
         player1Section.classList.add("focus_element_thick");
         player2Section.classList.remove("focus_element_thick");
         diceSection.classList.add("focus_element_thick");
-      } else {
+      } else if (playerColourHere === "r") {
         player2Section.classList.add("focus_element_thick");
         player1Section.classList.remove("focus_element_thick");
         diceSection.classList.remove("focus_element_thick");
       }
-      // activePlayer = activePlayer === "w" ? "r" : "w";
       break;
-    case "firstTurn player2":
-      gameState = "firstTurn player2";
-      player1NameSection.classList.remove("focus_element_thick");
-      player2NameSection.classList.add("focus_element_thick");
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+    case "playerR firstTurn":
+      gameState = "playerR firstTurn";
+      if (playerColourHere === "w") {
+        player1Section.classList.remove("focus_element_thick");
+        player2Section.classList.add("focus_element_thick");
+        diceSection.classList.remove("focus_element_thick");
+      } else if (playerColourHere === "r") {
+        player2Section.classList.remove("focus_element_thick");
+        player1Section.classList.add("focus_element_thick");
+        diceSection.classList.add("focus_element_thick");
+      }
       break;
-    case "turn player1 predice":
-      gameState = "turn player1 predice";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+    case "playerW roll":
+      applyTurnStyling();
+      gameState = "playerW roll";
+      gameBoard.classList.add("no_pointer_events");
+      gameBoard.classList.remove("focus_element_thick");
+      if (playerColourHere === "w") {
+        player1Section.classList.add("focus_element_thick");
+        player2Section.classList.remove("focus_element_thick");
+        diceSection.classList.add("focus_element_thick");
+      } else if (playerColourHere === "r") {
+        player2Section.classList.add("focus_element_thick");
+        player1Section.classList.remove("focus_element_thick");
+        diceSection.classList.remove("focus_element_thick");
+      }
       break;
-    case "turn player1 postdice":
-      gameBoard.classList.add("focus_element_thick");
+    case "playerW move":
+      gameState = "playerW move";
       diceSection.classList.remove("focus_element_thick");
-      gameState = "turn player1 predice";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+      if (playerColourHere === "w") {
+        gameBoard.classList.add("focus_element_thick");
+        gameBoard.classList.remove("no_pointer_events");
+      } else if (playerColourHere === "r") {
+        gameBoard.classList.remove("focus_element_thick");
+        gameBoard.classList.add("no_pointer_events");
+      }
       break;
-    case "turn player2 predice":
-      gameState = "turn player2";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+    case "playerR roll":
+      applyTurnStyling();
+      gameState = "playerR roll";
+      gameBoard.classList.add("no_pointer_events");
+      gameBoard.classList.remove("focus_element_thick");
+      if (playerColourHere === "w") {
+        player1Section.classList.remove("focus_element_thick");
+        player2Section.classList.add("focus_element_thick");
+        diceSection.classList.remove("focus_element_thick");
+      } else if (playerColourHere === "r") {
+        player2Section.classList.remove("focus_element_thick");
+        player1Section.classList.add("focus_element_thick");
+        diceSection.classList.add("focus_element_thick");
+      }
       break;
-    case "turn player2 postdice":
-      gameState = "turn player2";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+    case "playerR move":
+      gameState = "playerR move";
+      diceSection.classList.remove("focus_element_thick");
+      if (playerColourHere === "w") {
+        gameBoard.classList.remove("focus_element_thick");
+        gameBoard.classList.add("no_pointer_events");
+      } else if (playerColourHere === "r") {
+        gameBoard.classList.add("focus_element_thick");
+        gameBoard.classList.remove("no_pointer_events");
+      }
       break;
-    case "end":
-      gameState = "end";
+    case "end win":
+      gameState = "end win";
+      break;
+    case "end forfeit":
+      gameState = "end forfeit";
       break;
   }
-  // const gameStateMessage = { type: "gameState", data: gameState };
+  const gameStateMessage = { type: "gameState", data: gameState };
+  console.log(gameStateMessage);
   // sendMessageToIframe(gameStateMessage);
 }
 
 function spinAnimation() {
   playerArrow.classList.add("spinning_arrow");
   setTimeout(() => {
-    assignPlayersSectionClasses(playerNumberHere);
+    assignPlayersSectionClasses(playerColourHere);
     playerArrow.classList.remove("spinning_arrow");
   }, 3500);
+}
+
+function challengeSuccessful(opponentName) {
+  if (challengeCancel === false && challengeAccepted === true) {
+    const challengePlayersMessage = `<p><u>${opponentName}</u> has accepted your challenge!</p>`;
+    challengeTitle.textContent = "CHALLENGE ACCEPTED";
+    challengeNames.innerHTML = challengePlayersMessage;
+    challengeInformation.textContent = "Starting game...";
+    challengeSection.style.backgroundColor = "green";
+    buttonChallengeCancel.classList.add("hidden");
+    sendMessageToOpponent({
+      type: "challengeAccepted",
+      data: playerObjectHere,
+    });
+    setTimeout(() => {
+      console.log(`Opponent accepted challenge`);
+      challengeSection.classList.add("no_pointer_events");
+      challengeSection.classList.remove("show");
+      step3Process();
+    }, 2000);
+  }
+  if (challengeAccepted === false) {
+    console.log(`Opponent rejected challenge`);
+    const challengePlayersMessage = `<p><u>${opponentName}</u> has rejected your challenge!</p>`;
+    challengeTitle.textContent = "CHALLENGE REJECTED";
+    challengeNames.innerHTML = challengePlayersMessage;
+    setTimeout(() => {
+      challengeSection.classList.add("no_pointer_events");
+      challengeSection.classList.remove("show");
+      gameStartResetButton.classList.remove("no_pointer_events");
+      buttonGamestartOpponent.classList.add("focus_element");
+      gameStartButtonChallenge.classList.remove("activated_button");
+      gameStartButtonChallenge.classList.add("focus_element");
+    }, 2000);
+    return;
+  }
+  return;
+}
+
+function simulateChallengeAcceptance() {
+  let result = Math.round(Math.random());
+  if (result === 0) {
+    receiveMessageFromOpponent({
+      type: "challengeAccepted",
+      data: opponentObjectHere,
+    });
+  } else {
+    receiveMessageFromOpponent({
+      type: "challengeRejected",
+      data: opponentObjectHere,
+    });
+  }
+}
+
+function sendMessageToOpponent(message) {
+  console.log(`Sent to opponent: ${JSON.stringify(message)}`);
+  console.log(`Message type: ${JSON.stringify(message.type)}`);
+  console.log(`Message data: ${JSON.stringify(message.data)}`);
+}
+
+function receiveMessageFromOpponent(message) {
+  console.log(`Received from opponent: ${JSON.stringify(message)}`);
+  console.log(`Message type: ${JSON.stringify(message.type)}`);
+  console.log(`Message data: ${JSON.stringify(message.data)}`);
+  processMessageFromOpponent(message);
+}
+
+function processMessageFromOpponent(message) {
+  let opponentName;
+  switch (message.type) {
+    case "challengeAccepted":
+      console.log(JSON.stringify(message.data.displayName));
+      challengeAccepted = true;
+      opponentName = message.data.displayName;
+      console.log(`Opponent Name: ${opponentName}`);
+      challengeSuccessful(opponentName);
+      break;
+    case "challengeRejected":
+      console.log(JSON.stringify(message));
+      console.log(JSON.stringify(message.data.displayName));
+      challengeAccepted = false;
+      opponentName = message.data.displayName;
+      challengeSuccessful(opponentName);
+      break;
+  }
+}
+
+function challengeReceivedProcessing() {
+  receiveMessageFromOpponent({
+    type: "challengeSent",
+    data: opponentObjectHere,
+  });
+  const opponentName = "Jack";
+  buttonGamestartOpponent.textContent = opponentName;
+  const challengeReceivedHTML = `<p><u>${opponentName}</u> challenges you to a game!</p>`;
+  challengeReceivedText.innerHTML = challengeReceivedHTML;
+  gamestartBox.classList.add("no_pointer_events");
+  gamestartBox.classList.remove("focus_element_thick");
+  challengeReceivedSection.classList.add("show");
+  challengeReceivedSection.classList.add("focus_element_thick");
+  challengeReceivedSection.classList.remove("no_pointer_events");
+}
+
+function assignPlayerColorNames() {
+  if (playerColourHere === "w") {
+    playerWName = playerObjectHere.displayName;
+    playerRName = opponentObjectHere.displayName;
+  } else if (playerColourHere === "r") {
+    playerWName = opponentObjectHere.displayName;
+    playerRName = playerObjectHere.displayName;
+  }
 }

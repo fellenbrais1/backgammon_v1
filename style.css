@@ -397,7 +397,7 @@ html {
   height: 250px;
   width: 600px;
   z-index: 9;
-  padding-top: 24px;
+  padding-top: 16px;
   border: solid 2px white;
   border-radius: 25px;
   background-color: var(--youtube_red);
@@ -409,11 +409,17 @@ html {
 
 .challenge_block {
   display: grid;
-  grid-template-rows: 50px 40px auto;
-  row-gap: 16px;
+  grid-template-rows: 50px 40px 40px 60px;
+  row-gap: 10px;
 }
 
 .challenge_text {
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+}
+
+.challenge_text_names {
   font-size: 24px;
   color: white;
   font-weight: bold;
@@ -984,7 +990,7 @@ html {
   position: absolute;
   bottom: 0%;
   left: 43.5%;
-  height: 40px;
+  height: 68px;
   width: 250px;
   border: 2px solid white;
   border-top-left-radius: 25px;
@@ -996,6 +1002,7 @@ html {
 
 .floating_buttons_toggler_arrow {
   margin-left: 44%;
+  margin-top: 20px;
   color: white;
 }
 
