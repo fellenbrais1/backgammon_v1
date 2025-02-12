@@ -358,6 +358,9 @@ let guestUserObject = {
   member: false,
   languages: ["english"],
   friends: [],
+  lastLoggedIn: "",
+  skillLevel: "beginner",
+  peerId: "",
 };
 
 // Opponent user object
@@ -630,7 +633,10 @@ gameStartButtonChallenge.addEventListener("click", () => {
     buttonChallengeCancel.classList.remove("hidden");
     challengeSection.classList.add("show");
     challengeSection.classList.remove("no_pointer_events");
-    sendMessageToOpponent({ type: "challengeSent", data: playerObjectHere });
+    sendMessageToOpponent({
+      method: "challengeSent",
+      params: playerObjectHere,
+    });
     setTimeout(() => {
       // TODO Replace with real logic when ready
       simulateChallengeAcceptance();
@@ -648,8 +654,8 @@ buttonChallengeCancel.addEventListener("click", () => {
   challengeCancel = true;
   challengeInformation.textContent = "Cancelling challenge...";
   sendMessageToOpponent({
-    type: "challengeRejected",
-    data: opponentObjectHere,
+    method: "challengeRejected",
+    params: opponentObjectHere,
   });
   setTimeout(() => {
     challengeSection.classList.add("no_pointer_events");
@@ -661,8 +667,8 @@ buttonChallengeCancel.addEventListener("click", () => {
 // CHALLENGE RECEIVED SECTION LISTENERS
 challengeReceivedButtonAccept.addEventListener("click", () => {
   sendMessageToOpponent({
-    type: "challengeAccepted",
-    data: playerObjectHere,
+    method: "challengeAccepted",
+    params: playerObjectHere,
   });
   step3Process();
   challengeReceivedSection.classList.remove("show");
@@ -670,7 +676,10 @@ challengeReceivedButtonAccept.addEventListener("click", () => {
 });
 
 challengeReceivedButtonDecline.addEventListener("click", () => {
-  sendMessageToOpponent({ type: "challengeDeclined", data: playerObjectHere });
+  sendMessageToOpponent({
+    method: "challengeDeclined",
+    params: playerObjectHere,
+  });
   challengeReceivedSection.classList.remove("show");
   challengeReceivedSection.classList.add("no_pointer_events");
   gamestartBox.classList.remove("no_pointer_events");
@@ -705,7 +714,7 @@ buttonForfeitYes.addEventListener("click", () => {
         showMain();
         resetDice();
       }, 1000);
-      sendMessageToIframe({ type: "resetBoard", data: "none" });
+      sendMessageToIframe({ method: "resetBoard", params: "none" });
     }, 5000);
   });
 });
@@ -849,9 +858,9 @@ floatingButtonsToggle.addEventListener("click", () => {
 // DICE SECTION LISTENERS
 diceRollResult.addEventListener("click", () => {
   if (firstTurn) {
-    sendMessageToIframe({ type: "rollOnce", data: "none" });
+    sendMessageToIframe({ method: "rollOnce", params: "none" });
   } else {
-    sendMessageToIframe({ type: "rollTwice", data: "none" });
+    sendMessageToIframe({ method: "rollTwice", params: "none" });
   }
 });
 
@@ -904,18 +913,18 @@ window.addEventListener("message", (event) => {
 function handleMessageFromIframe(message) {
   console.log("Webpage received:", message);
   let chatHTML;
-  switch (message.type) {
+  switch (message.method) {
     case "gameState":
-      console.log(message.data);
-      changeGameState(message.data);
+      console.log(message.params);
+      changeGameState(message.params);
       break;
     case "1DieResult":
-      console.log(message.data);
-      rollOneDie(message.data);
+      console.log(message.params);
+      rollOneDie(message.params);
       break;
     case "2DiceResult":
-      console.log(message.data);
-      rollTwoDice(message.data);
+      console.log(message.params);
+      rollTwoDice(message.params);
       break;
     case "rollResultDraw":
       chatHTML = `<p class='chat_entry_c'>It's a tie, seeing who goes first...</p>`;
@@ -924,13 +933,13 @@ function handleMessageFromIframe(message) {
       assignPlayers();
       break;
     case "displayNotification":
-      if (message.data === "W goes first") {
+      if (message.params === "W goes first") {
         chatHTML = `<p class='chat_entry_c'><strong>${playerWName}</strong> goes first!</p>`;
         addGameNotification(chatHTML);
         displayLatestMessage();
         currentPlayerTurn = "w";
         applyTurnStyling();
-      } else if (message.data === "R goes first") {
+      } else if (message.params === "R goes first") {
         chatHTML = `<p class='chat_entry_c'><strong>${playerRName}</strong> goes first!</p>`;
         addGameNotification(chatHTML);
         displayLatestMessage();
@@ -1041,7 +1050,7 @@ function rollOneDie(result) {
       return;
     }
     shrinkDiceResult();
-    sendMessageToIframe({ type: "changeTurn", data: "playerR firstTurn" });
+    sendMessageToIframe({ method: "changeTurn", params: "playerR firstTurn" });
     const chatHTML3 = `<p class='chat_entry_c'><strong>${playerRName}'s</strong> turn!</p>`;
     addGameNotification(chatHTML3);
     displayLatestMessage();
@@ -1273,8 +1282,8 @@ function forfeitMessage() {
   chatHTML2 = `<p class='chat_entry_d'><strong>${opponentName}</strong> wins the game!</p>`;
   addGameNotification(chatHTML);
   addGameNotification(chatHTML2);
-  sendMessageToIframe({ type: "forfeitMessage", data: chatHTML });
-  sendMessageToIframe({ type: "forfeitMessage", data: chatHTML2 });
+  sendMessageToIframe({ method: "forfeitMessage", params: chatHTML });
+  sendMessageToIframe({ method: "forfeitMessage", params: chatHTML2 });
 }
 
 // Plays the set click sound for the webpage
@@ -1803,7 +1812,7 @@ function turnOneEnd() {
   diceFace2.style.opacity = 1;
   firstTurn = false;
   console.log(turnOneRolls);
-  sendMessageToIframe({ type: "chooseFirstPlayer", data: turnOneRolls });
+  sendMessageToIframe({ method: "chooseFirstPlayer", params: turnOneRolls });
 }
 
 // Allows the diceResult element to shrink back down to its original size and style
@@ -1907,7 +1916,7 @@ function step3Process() {
       imbedGame.classList.remove("no_pointer_events");
     }, 1000);
     setTimeout(() => {
-      sendMessageToIframe({ type: "startGame", data: "none" });
+      sendMessageToIframe({ method: "startGame", params: "none" });
     }, 1000);
     const displayName = playerNameForm.value;
     const chatHTML = `<p class='chat_entry_c'>Welcome <strong>${displayName}!</strong></p>`;
@@ -2180,7 +2189,7 @@ function changeGameState(state) {
       gameState = "end forfeit";
       break;
   }
-  const gameStateMessage = { type: "gameState", data: gameState };
+  const gameStateMessage = { method: "gameState", params: gameState };
   console.log(gameStateMessage);
   // sendMessageToIframe(gameStateMessage);
 }
@@ -2202,8 +2211,8 @@ function challengeSuccessful(opponentName) {
     challengeSection.style.backgroundColor = "green";
     buttonChallengeCancel.classList.add("hidden");
     sendMessageToOpponent({
-      type: "challengeAccepted",
-      data: playerObjectHere,
+      method: "challengeAccepted",
+      params: playerObjectHere,
     });
     setTimeout(() => {
       console.log(`Opponent accepted challenge`);
@@ -2234,45 +2243,45 @@ function simulateChallengeAcceptance() {
   let result = Math.round(Math.random());
   if (result === 0) {
     receiveMessageFromOpponent({
-      type: "challengeAccepted",
-      data: opponentObjectHere,
+      method: "challengeAccepted",
+      params: opponentObjectHere,
     });
   } else {
     receiveMessageFromOpponent({
-      type: "challengeRejected",
-      data: opponentObjectHere,
+      method: "challengeRejected",
+      params: opponentObjectHere,
     });
   }
 }
 
 function sendMessageToOpponent(message) {
   console.log(`Sent to opponent: ${JSON.stringify(message)}`);
-  console.log(`Message type: ${JSON.stringify(message.type)}`);
-  console.log(`Message data: ${JSON.stringify(message.data)}`);
+  console.log(`Message method: ${JSON.stringify(message.method)}`);
+  console.log(`Message params: ${JSON.stringify(message.params)}`);
 }
 
 function receiveMessageFromOpponent(message) {
   console.log(`Received from opponent: ${JSON.stringify(message)}`);
-  console.log(`Message type: ${JSON.stringify(message.type)}`);
-  console.log(`Message data: ${JSON.stringify(message.data)}`);
+  console.log(`Message method: ${JSON.stringify(message.method)}`);
+  console.log(`Message params: ${JSON.stringify(message.params)}`);
   processMessageFromOpponent(message);
 }
 
 function processMessageFromOpponent(message) {
   let opponentName;
-  switch (message.type) {
+  switch (message.method) {
     case "challengeAccepted":
-      console.log(JSON.stringify(message.data.displayName));
+      console.log(JSON.stringify(message.params.displayName));
       challengeAccepted = true;
-      opponentName = message.data.displayName;
+      opponentName = message.params.displayName;
       console.log(`Opponent Name: ${opponentName}`);
       challengeSuccessful(opponentName);
       break;
     case "challengeRejected":
       console.log(JSON.stringify(message));
-      console.log(JSON.stringify(message.data.displayName));
+      console.log(JSON.stringify(message.params.displayName));
       challengeAccepted = false;
-      opponentName = message.data.displayName;
+      opponentName = message.params.displayName;
       challengeSuccessful(opponentName);
       break;
   }
@@ -2280,8 +2289,8 @@ function processMessageFromOpponent(message) {
 
 function challengeReceivedProcessing() {
   receiveMessageFromOpponent({
-    type: "challengeSent",
-    data: opponentObjectHere,
+    method: "challengeSent",
+    params: opponentObjectHere,
   });
   const opponentName = "Jack";
   buttonGamestartOpponent.textContent = opponentName;

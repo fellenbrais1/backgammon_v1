@@ -1,78 +1,240 @@
-let peerConnection;
-let dataChannel;
+let peer;
 
-// Log messages to the textarea
-function logMessage(message) {
-  const log = document.getElementById("log");
-  log.value += message + "\n";
+console.log("Using Firebase in app.js:", parent.firebaseApp);
+const database = parent.database;
+console.log(database);
+
+document.addEventListener("DOMContentLoaded", () => {
+  peer = new peer({
+    host: "0.peerjs.com",
+    port: 443,
+    secure: true,
+    key: "peerjs",
+  });
+
+  peer.on("open", (id) => {
+    console.log("My unique peer ID is: " + id);
+  });
+
+  // On the remote peer's side
+  peer.on("connection", (connection) => {
+    console.log("Incoming connection from:", connection.peer);
+    conn = connection;
+
+    conn.on("open", () => {
+      console.log("Connection opened with:", connection.peer);
+    });
+
+    conn.on("data", (data) => {
+      console.log("Received data:", data);
+    });
+
+    conn.on("error", (err) => {
+      console.error("Connection error:", err);
+    });
+  });
+
+  peer.on("reconnect", () => {
+    console.log("Reconnected to PeerJS server");
+    peer.on("open", (id) => {
+      console.log("New peer ID after reconnection:", id);
+    });
+  });
+
+  peer.on("disconnected", () => {
+    console.log("Peer disconnected");
+    // removePeerIdFromDatabase(peer.id);
+  });
+});
+
+let remotePeerId = "";
+let conn;
+
+// Register on Firebase
+function registerForChat(player) {
+  if (!player.username) {
+    console.error("Error: Username cannot be empty");
+    return;
+  }
+  console.log("Registering " + player.username);
+
+  const playerData = {
+    peerId: player.peerId,
+    skillLevel: player.skillLevel,
+    languages: player.languages,
+    lastLoggedIn: new Date().toISOString(),
+  };
+
+  const playersRef = database.ref("players/" + player.username); // Reference to the 'players' node
+
+  playersRef
+    .set(playerData)
+    .then(() => console.log("Player registered successfully"))
+    .catch((err) => console.error("Error registering player:", err));
 }
 
-// Initialize the peer connection and data channel
-function initializeConnection() {
-  peerConnection = new RTCPeerConnection();
+async function fetchPlayers() {
+  const playersRef = database.ref("players");
 
-  // Create a data channel (only for the initiating user)
-  dataChannel = peerConnection.createDataChannel("chat");
-  dataChannel.onopen = () => logMessage("Data channel is open");
-  dataChannel.onmessage = (event) => logMessage("Peer: " + event.data);
+  playersRef.on("value", (snapshot) => {
+    const players = snapshot.val(); // Get all players as an object
+    console.log("Players:", players);
+  });
+}
 
-  // Listen for incoming ICE candidates
-  peerConnection.onicecandidate = (event) => {
-    if (event.candidate) {
-      logMessage(
-        "Send this ICE candidate to the peer: " +
-          JSON.stringify(event.candidate)
-      );
+async function fetchPlayer(remoteName) {
+  const playerRef = database.ref("players/" + remoteName);
+
+  try {
+    const snapshot = await playerRef.once("value");
+
+    if (snapshot.exists()) {
+      const remoteUserObject = snapshot.val();
+      remotePeerId = remoteUserObject.uniqueCode;
+      console.log(remoteName + " PeerJS code:", remotePeerId);
+      return remoteUserObject;
+    } else {
+      console.log("No player found with that username.");
+      return null;
     }
-  };
-
-  // Handle received data channels (for the answering user)
-  peerConnection.ondatachannel = (event) => {
-    dataChannel = event.channel;
-    dataChannel.onopen = () => logMessage("Data channel is open");
-    dataChannel.onmessage = (event) => logMessage("Peer: " + event.data);
-  };
+  } catch (err) {
+    console.error("Error fetching player data:", err);
+    return null;
+  }
 }
 
-// // Create an offer (for User 1)
-// async function createOffer() {
-//   const offer = await peerConnection.createOffer();
-//   await peerConnection.setLocalDescription(offer);
-//   logMessage("Send this offer to the peer: " + JSON.stringify(offer));
-// }
+async function connectToPlayer(remoteName) {
+  console.log("Attempting to connect to " + remoteName);
 
-// // Create an answer (for User 2)
-// async function createAnswer(offer) {
-//   await peerConnection.setRemoteDescription(offer);
-//   const answer = await peerConnection.createAnswer();
-//   await peerConnection.setLocalDescription(answer);
-//   logMessage("Send this answer to the peer: " + JSON.stringify(answer));
-// }
+  const playerRef = database.ref("players/" + remoteName);
 
-// // Add received answer (for User 1)
-// async function handleAnswer(answer) {
-//   await peerConnection.setRemoteDescription(answer);
-//   logMessage("Answer has been set as remote description");
-// }
+  try {
+    const snapshot = await playerRef.once("value");
 
-// // Add received ICE candidate
-// async function addIceCandidate(candidate) {
-//   await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-//   logMessage("ICE candidate added");
-// }
+    if (!snapshot.exists()) {
+      console.log("No player found with that username.");
+      return null;
+    }
 
-// Send a message through the data channel
-// function sendMessage() {
-//   const input = document.getElementById("messageInput");
-//   if (dataChannel && dataChannel.readyState === "open") {
-//     dataChannel.send(input.value);
-//     logMessage("You: " + input.value);
-//     input.value = "";
-//   }
-// }
+    const remotePeerId = snapshot.val().uniqueCode;
+    const conn = peer.connect(remotePeerId);
 
-// Attach event listeners
-// document.getElementById("sendMessage").addEventListener("click", sendMessage);
+    conn.on("error", (err) => {
+      console.error("Connection error:", err);
+    });
 
-// For initialization (add buttons for specific user actions if needed)
-initializeConnection();
+    conn.on("open", () => {
+      console.log("Connected to peer:", remotePeerId);
+      // Send a test message
+      // conn.send(message);
+    });
+
+    conn.on("data", (data) => {
+      console.log("Received data:", data);
+    });
+
+    return conn;
+  } catch (err) {
+    console.error("Error fetching player data:", err);
+    return null;
+  }
+}
+
+function sendRPC(method, params) {
+  const rpcMessage = {
+    method: method,
+    params: params,
+  };
+  conn.send(JSON.stringify(rpcMessage));
+}
+
+function handleRPC(data) {
+  console.log("handleRPC function called");
+  const rpcMessage = JSON.parse(data);
+  console.log("RPC Method:", rpcMessage.method);
+  console.log("RPC Params:", rpcMessage.params);
+
+  // Handle the RPC method
+  if (rpcMessage.method === "move") {
+    console.log("Player moved to:", rpcMessage.params.position);
+  }
+}
+
+// DEMO functions
+
+// Step 1: When displayName is set, registerForChat(your_display_name)
+function demoRegisterForChat() {
+  const name = document.getElementById("userName").value.trim();
+
+  // create a user object
+  let player = {
+    username: name,
+    languages: ["Enghlish", "Spanish"],
+    peerId: peer.id,
+    skillLevel: "beginner",
+  };
+
+  registerForChat(player);
+}
+
+// Step 2: Get the records of other players
+function demoFetchPlayers() {
+  fetchPlayers();
+}
+
+// Step 3: User picks a player from the list, then connects to that player
+async function demoConnectToPlayer() {
+  const remoteName = document.getElementById("remoteName").value.trim();
+  conn = await connectToPlayer(remoteName);
+}
+
+// Step 4.1: Send an RPC message, e.g. send a chat message
+function demoChat() {
+  // get the message to send
+  const message = document.getElementById("p2pMessage").value.trim();
+
+  sendRPC("chat", { message });
+}
+
+// Step 4.2: Send an RPC message, e.g. a challenge
+async function demoChallenge() {
+  const userName = document.getElementById("userName").value.trim();
+  const remoteName = document.getElementById("remoteName").value.trim();
+
+  console.log("Attempting to challenge " + remoteName);
+  const user = await fetchPlayer(userName);
+  console.log("User record for " + userName + ": ", user);
+
+  if (user) {
+    // Get my user object to send as part of the challenge
+    sendRPC("challenge", user);
+  }
+}
+
+// Step 4.3: Send an RPC response to challenge - accept
+function demoChallengeResponse() {
+  sendRPC("challengeResponse", "accept"); // or 'reject'
+}
+
+// Step 4.4: send a dice roll
+function demoSendDiceRoll() {
+  let sampleRoll = [2, 0, 0, 0];
+  sendRPC("diceRoll", sampleRoll);
+}
+
+// Step 4.5: send a move
+function demoSendMove() {
+  let sampleMove = {
+    player: "r",
+    from: 24,
+    to: 22,
+  };
+
+  sendRPC("pieceMove", sampleMove);
+}
+
+async function demoFetchPlayer() {
+  const remoteName = document.getElementById("remoteName").value.trim();
+  const remotePlayer = await fetchPlayer(remoteName);
+  console.log("remotePlayer:", remotePlayer);
+}

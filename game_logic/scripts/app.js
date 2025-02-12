@@ -9,6 +9,10 @@ const pieces = document.querySelectorAll(".piece");
 
 // let region, point;
 
+console.log("Using Firebase in app.js:", parent.firebaseApp);
+const db = parent.database;
+console.log(db);
+
 // SOUNDS
 const piecesDeal = document.getElementById("pieces_deal");
 const piecePickup = document.getElementById("piece_pickup");
@@ -26,16 +30,16 @@ const boardTopOffset = boardElement.getBoundingClientRect().top;
 // );
 
 let gameState = "start";
-let firstTurn = true;
+// let firstTurn = true;
 
-let player1, player2;
+// let player1, player2;
 
 boardElement.addEventListener("click", () => {
   const result = assignPlayers();
   console.log(result);
 });
 
-let gamePlayers;
+// let gamePlayers;
 
 // function getGamePlayers() {
 //   const playerA =
@@ -85,19 +89,17 @@ function changeGameState(state) {
       gameState = "end forfeit";
       break;
   }
-  const gameStateMessage = { type: "gameState", data: gameState };
+  const gameStateMessage = { method: "gameState", params: gameState };
   sendMessageToWebpage(gameStateMessage);
 }
 
 function rollOnce() {
   const result = board.throwDice(1);
-  // startingField.value = board.diceThrows;
   return result;
 }
 
 function rollTwice() {
   const result = board.throwDice(2);
-  // startingField.value = board.diceThrows;
   return result;
 }
 
@@ -248,9 +250,9 @@ const board = {
 };
 
 // Global game object
-const game = {
-  turn: "w",
-};
+// const game = {
+//   turn: "w",
+// };
 
 window.addEventListener("message", (event) => {
   const receivedMessage = event.data;
@@ -264,48 +266,48 @@ function sendMessageToWebpage(message) {
 function handleMessageFromParent(message) {
   console.log("Iframe received:", message);
   let roll, messageContent, firstTurnRollResults;
-  switch (message.type) {
+  switch (message.method) {
     case "startGame":
       startGame();
       break;
     case "changeTurn":
-      changeGameState(message.data);
+      changeGameState(message.params);
       break;
     case "rollOnce":
       roll = rollOnce();
       console.log(roll);
-      sendMessageToWebpage({ type: "1DieResult", data: roll });
+      sendMessageToWebpage({ method: "1DieResult", params: roll });
       changeGameState("playerR firstTurn");
       break;
     case "rollTwice":
       roll = rollTwice();
       console.log(roll);
-      sendMessageToWebpage({ type: "2DiceResult", data: roll });
+      sendMessageToWebpage({ method: "2DiceResult", params: roll });
       break;
     case "chooseFirstPlayer":
-      firstTurnRollResults = message.data;
+      firstTurnRollResults = message.params;
       console.log(firstTurnRollResults);
       console.log(firstTurnRollResults[0]);
       console.log(firstTurnRollResults[1]);
       if (firstTurnRollResults[0] === firstTurnRollResults[1]) {
-        sendMessageToWebpage({ type: "rollResultDraw", data: "none" });
+        sendMessageToWebpage({ method: "rollResultDraw", params: "none" });
       }
       if (firstTurnRollResults[0] > firstTurnRollResults[1]) {
         console.log(`W goes first`);
         changeGameState("playerW roll");
         sendMessageToWebpage({
-          type: "displayNotification",
-          data: "W goes first",
+          method: "displayNotification",
+          params: "W goes first",
         });
-        sendMessageToWebpage({ type: "gameState", data: "playerW roll" });
+        sendMessageToWebpage({ method: "gameState", params: "playerW roll" });
       } else if (firstTurnRollResults[0] < firstTurnRollResults[1]) {
         console.log(`R goes first`);
         changeGameState("playerR roll");
         sendMessageToWebpage({
-          type: "displayNotification",
-          data: "R goes first",
+          method: "displayNotification",
+          params: "R goes first",
         });
-        sendMessageToWebpage({ type: "gameState", data: "playerR roll" });
+        sendMessageToWebpage({ method: "gameState", params: "playerR roll" });
       }
       break;
     case "resetBoard":
@@ -316,19 +318,19 @@ function handleMessageFromParent(message) {
       console.log(`Resetting board...`);
       break;
     case "chatMessage":
-      messageContent = message.data;
+      messageContent = message.params;
       console.log(messageContent);
       break;
     case "gameMessage":
-      messageContent = message.data;
+      messageContent = message.params;
       console.log(messageContent);
       break;
     case "winMessage":
-      messageContent = message.data;
+      messageContent = message.params;
       console.log(message);
       break;
     case "forfeitMessage":
-      messageContent = message.data;
+      messageContent = message.params;
       console.log(message);
       break;
   }
@@ -500,21 +502,21 @@ async function applyMove(piece, move) {
   let posToOccupy = board.contents[move.to].occupied.length + 1;
   let [x, y] = getPieceCoords(move.to, posToOccupy);
 
-  console.log(
-    "Before",
-    "\tOnTheMove: " + board.onTheMove,
-    "\tAt " + move.from + ": " + board.contents[move.from].occupied,
-    "\tAt " + move.to + ": " + board.contents[move.to].occupied
-  );
+  // console.log(
+  //   "Before",
+  //   "\tOnTheMove: " + board.onTheMove,
+  //   "\tAt " + move.from + ": " + board.contents[move.from].occupied,
+  //   "\tAt " + move.to + ": " + board.contents[move.to].occupied
+  // );
 
   board.movePiece(activePlayer, move.from, move.to);
 
-  console.log(
-    "After",
-    "\tOnTheMove: " + board.onTheMove,
-    "\tAt " + move.from + ": " + board.contents[move.from].occupied,
-    "\tAt " + move.to + ": " + board.contents[move.to].occupied
-  );
+  // console.log(
+  //   "After",
+  //   "\tOnTheMove: " + board.onTheMove,
+  //   "\tAt " + move.from + ": " + board.contents[move.from].occupied,
+  //   "\tAt " + move.to + ": " + board.contents[move.to].occupied
+  // );
 
   board.updatePointOccupation(move.to);
   await animateMovePiece(piece, x, y, 0.5);

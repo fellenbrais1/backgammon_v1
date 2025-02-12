@@ -613,6 +613,29 @@
     <audio id="piece_putdown" src="../sound/piecePutdown.wav"></audio>
     <!-- SCRIPTS -->
     <script src="scripts/app.js"></script>
+    <script src="scripts/chat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+    <script>
+      // Initialize Firebase using the compat version
+      const firebaseConfig = {
+        apiKey: "AIzaSyDjRxMuNLPRmXuBb2t7OUvLzbjgIatNMJg",
+        authDomain: "backgammon-b1e25.firebaseapp.com",
+        projectId: "backgammon-b1e25",
+        storageBucket: "backgammon-b1e25.firebasestorage.app",
+        messagingSenderId: "933438650220",
+        appId: "1:933438650220:web:7cfd8f56a2aef998e46549",
+        measurementId: "G-ST0Z166K8V",
+      };
+
+      parent.firebaseApp = firebase.initializeApp(firebaseConfig);
+      parent.analytics = firebase.analytics();
+      parent.database = firebase.database();
+
+      console.log("Firebase initialized successfully.");
+    </script>
     <!-- <script src="scripts/chat.js"></script> -->
   </body>
 </html>
