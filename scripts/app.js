@@ -1,14 +1,17 @@
 // CODE START //
 
+import { firebaseApp, analytics, database } from "../scripts/firebaseConfig.js";
+
 const PIECE_RADIUS = 18;
 const PIECE_DIAMETER = PIECE_RADIUS + PIECE_RADIUS;
 const VERTICAL_TOLERANCE = 4;
 
 const pieces = document.querySelectorAll(".piece");
 
-console.log("Using Firebase in app.js:", parent.firebaseApp);
-const db = parent.database;
-// console.log(db);
+console.log("Using Firebase in app.js:", firebaseApp);
+const db = database;
+console.log(analytics);
+console.log(db);
 
 // SOUNDS
 const piecesDeal = document.getElementById("pieces_deal");

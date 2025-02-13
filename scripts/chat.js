@@ -1,7 +1,13 @@
+"use strict";
+
+import { firebaseApp, analytics, database } from "../scripts/firebaseConfig.js";
+
 let peer;
 
-console.log("Using Firebase in chat.js:", parent.firebaseApp);
-const database = parent.database;
+console.log("Using Firebase in chat.js:", firebaseApp);
+const db = database;
+console.log(analytics);
+console.log(db);
 
 document.addEventListener("DOMContentLoaded", () => {
   peer = new peer({

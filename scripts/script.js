@@ -3,7 +3,7 @@
 
 "use strict";
 
-import { startGame } from "./app.js";
+import { startGame } from "../scripts/app.js";
 
 console.log(`Backgammon page script V4`);
 

@@ -8,27 +8,27 @@
     <!-- TITLE -->
     <title>Fresh Version</title>
     <!-- STYLESHEETS -->
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="gameBoardStyle.css" />
+    <link rel="stylesheet" href="./stylesheets/style.css" />
+    <link rel="stylesheet" href="./stylesheets/gameBoardStyle.css" />
     <!-- FAVICON -->
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="img/favicon2/apple-touch-icon.png"
+      href="img/favicon/apple-touch-icon.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="img/favicon2/favicon-32x32.png"
+      href="img/favicon/favicon-32x32.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="img/favicon2/favicon-16x16.png"
+      href="img/favicon/favicon-16x16.png"
     />
-    <link rel="manifest" href="img/favicon2/site.webmanifest" />
+    <link rel="manifest" href="img/favicon/site.webmanifest" />
   </head>
   <body>
     <!-- MAIN PAGE ELEMENTS -->
@@ -790,55 +790,14 @@
     <audio id="number12" src="./sound/number12.wav"></audio>
     <audio id="challenge_sound" src="./sound/chat_notification.wav"></audio>
     <!-- SCRIPTS -->
-    <script src="./script.js" type="module" defer></script>
-    <script src="./app.js" type="module" defer></script>
-    <!-- <script src="./chat.js" type="module" defer></script> -->
+    <script src="./scripts/script.js" type="module" defer></script>
+    <script src="./scripts/app.js" type="module" defer></script>
+    <script src="./scripts/chat.js" type="module" defer></script>
+    <script src="./scripts/firebaseConfig.js" type="module" defer></script>
+    <!-- ONLINE SCRIPTS -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script>
-      // Initialize Firebase using the compat version
-      const firebaseConfig = {
-        apiKey: "AIzaSyDjRxMuNLPRmXuBb2t7OUvLzbjgIatNMJg",
-        authDomain: "backgammon-b1e25.firebaseapp.com",
-        projectId: "backgammon-b1e25",
-        storageBucket: "backgammon-b1e25.firebasestorage.app",
-        messagingSenderId: "933438650220",
-        appId: "1:933438650220:web:7cfd8f56a2aef998e46549",
-        measurementId: "G-ST0Z166K8V",
-      };
-
-      parent.firebaseApp = firebase.initializeApp(firebaseConfig);
-      parent.analytics = firebase.analytics();
-      parent.database = firebase.database();
-
-      console.log("Firebase initialized successfully.");
-    </script>
-    <!-- <script src="./game_logic/scripts/chat.js" defer></script> -->
-    <!-- <script>
-      fetch("./game_logic/index.html")
-        .then((response) => response.text())
-        .then((html) => {
-          const container = document.getElementById("content_container");
-          container.innerHTML = html;
-
-          // const script = document.createElement("script");
-          // script.src = "/content/scripts/app.js";
-          // script.async = true;
-          // document.body.appendChild(script);
-          // container.querySelectorAll("script").forEach((oldScript) => {
-          //   const newScript = document.createElement("script");
-          //   if (oldScript.src) {
-          //     newScript.src = oldScript.src; // Reload external scripts
-          //     newScript.async = true;
-          //   } else {
-          //     newScript.textContent = oldScript.textContent; // Run inline scripts
-          //   }
-          //   document.body.appendChild(newScript); // Add to DOM
-          // });
-        })
-        .catch((error) => console.error("Error loading content:", error));
-    </script> -->
   </body>
 </html>
 <!-- CODE END -->
