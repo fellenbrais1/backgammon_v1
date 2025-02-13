@@ -2,15 +2,15 @@
 
 import { firebaseApp, analytics, database } from "../scripts/firebaseConfig.js";
 
-let peer;
-
 console.log("Using Firebase in chat.js:", firebaseApp);
 const db = database;
 console.log(analytics);
 console.log(db);
 
+let peer;
+
 document.addEventListener("DOMContentLoaded", () => {
-  peer = new peer({
+  peer = new Peer({
     host: "0.peerjs.com",
     port: 443,
     secure: true,
@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   peer.on("open", (id) => {
     console.log("My unique peer ID is: " + id);
+    console.log(peer);
   });
 
   // On the remote peer's side

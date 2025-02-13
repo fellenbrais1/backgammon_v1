@@ -1,3 +1,4 @@
+// CODE START
 "use strict";
 
 const firebaseConfig = {
@@ -15,3 +16,5 @@ export const analytics = window.firebase.analytics();
 export const database = window.firebase.database();
 
 console.log("Firebase initialized successfully.");
+
+// CODE END

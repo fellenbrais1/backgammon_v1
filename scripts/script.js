@@ -1,33 +1,13 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 // START OF CODE
 
 "use strict";
-
-import { startGame } from "../scripts/app.js";
-
 console.log(`Backgammon page script V4`);
 
-// const contentContainer = document.getElementById("content_container");
+// IMPORTS
+import { startGame, rollOnce, rollTwice } from "../scripts/app.js";
 
-// contentContainer.addEventListener("load", () => {
-//   // Listen for messages from the game:
-//   window.addEventListener("messageFromGame", (event) => {
-//     console.log("Main page received message:", event.detail);
-//     // Handle message from the game
-//   });
-// });
-
-// function sendMessageToGame(message) {
-//   if (contentContainer.contentWindow) {
-//     const event = new CustomEvent("messageToGame", {
-//       type: message.type,
-//       params: message.params,
-//     });
-//     contentContainer.contentWindow.dispatchEvent(event); // Dispatch the event on the window object
-//   }
-// }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
 
 // Main overlay elements
@@ -35,7 +15,6 @@ const introDisplay = document.querySelector(".intro_display");
 
 // Game start elements
 const gamestartBox = document.querySelector(".gamestart_block");
-// const greyOverlay = document.querySelector(".grey_overlay");
 const helperBox = document.querySelector(".helper_div");
 const gameStartResetButton = document.querySelector(".gamestart_reset_button");
 const buttonGamestartFun = document.querySelector(".gamestart_button_fun");
@@ -53,7 +32,6 @@ const gameStartButtonChallenge = document.querySelector(
 // Game board elements
 const gameBoard = document.querySelector(".game_board");
 const imbedGame = document.getElementById("content_container");
-// const iframe = document.getElementById("imbed_game");
 
 // Forfeit section elements
 const forfeitSection = document.querySelector(".forfeit_section");
@@ -169,7 +147,6 @@ const adSection = document.querySelector(".adbox");
 const adNotification = document.querySelector(".ad_notification");
 
 // Debug elements
-// const gameToggler = document.querySelector(".toggle_game_button");
 const cookieClearer = document.querySelector(".clear_cookie_button");
 const askJack = document.querySelector(".ask_jack_button");
 const changeTurnButton = document.querySelector(".change_turn_button");
@@ -655,7 +632,7 @@ gameStartButtonChallenge.addEventListener("click", () => {
     buttonChallengeCancel.classList.remove("hidden");
     challengeSection.classList.add("show");
     challengeSection.classList.remove("no_pointer_events");
-    sendMessageToOpponent({
+    sendGameMessage({
       method: "challengeSent",
       params: playerObjectHere,
     });
@@ -675,7 +652,7 @@ buttonChallengeCancel.addEventListener("click", () => {
   playClickSound();
   challengeCancel = true;
   challengeInformation.textContent = "Cancelling challenge...";
-  sendMessageToOpponent({
+  sendGameMessage({
     method: "challengeRejected",
     params: opponentObjectHere,
   });
@@ -688,7 +665,7 @@ buttonChallengeCancel.addEventListener("click", () => {
 
 // CHALLENGE RECEIVED SECTION LISTENERS
 challengeReceivedButtonAccept.addEventListener("click", () => {
-  sendMessageToOpponent({
+  sendGameMessage({
     method: "challengeAccepted",
     params: playerObjectHere,
   });
@@ -698,7 +675,7 @@ challengeReceivedButtonAccept.addEventListener("click", () => {
 });
 
 challengeReceivedButtonDecline.addEventListener("click", () => {
-  sendMessageToOpponent({
+  sendGameMessage({
     method: "challengeDeclined",
     params: playerObjectHere,
   });
@@ -736,7 +713,7 @@ buttonForfeitYes.addEventListener("click", () => {
         showMain();
         resetDice();
       }, 1000);
-      sendMessageToOpponent({ method: "resetBoard", params: "none" });
+      sendGameMessage({ method: "resetBoard", params: "none" });
     }, 5000);
   });
 });
@@ -880,9 +857,15 @@ floatingButtonsToggle.addEventListener("click", () => {
 // DICE SECTION LISTENERS
 diceRollResult.addEventListener("click", () => {
   if (firstTurn) {
-    sendMessageToGame({ method: "rollOnce", params: "none" });
+    const roll = rollOnce();
+    console.log(roll);
+    sendGameMessage({ method: "1DieResult", params: roll });
+    rollOneDie(roll);
+    // changeGameState("playerR firstTurn");
   } else {
-    sendMessageToGame({ method: "rollTwice", params: "none" });
+    const roll = rollTwice();
+    console.log(roll);
+    sendGameMessage({ method: "2DiceResult", params: roll });
   }
 });
 
@@ -927,49 +910,8 @@ simulateChallengeButton.addEventListener("click", () => {
 // Called whenever the iframe object sends a message to the window object
 window.addEventListener("message", (event) => {
   const receivedMessage = JSON.parse(event.data);
-  handleMessageFromOpponent(receivedMessage);
+  receiveGameMessage(receivedMessage);
 });
-
-// Triggers various functions based on the content of a message received from the iframe object
-// Called by an eventListener on the window object
-function handleMessageFromOpponent(message) {
-  console.log("Webpage received:", message);
-  let chatHTML;
-  switch (message.method) {
-    case "gameState":
-      console.log(message.params);
-      changeGameState(message.params);
-      break;
-    case "1DieResult":
-      console.log(message.params);
-      rollOneDie(message.params);
-      break;
-    case "2DiceResult":
-      console.log(message.params);
-      rollTwoDice(message.params);
-      break;
-    case "rollResultDraw":
-      chatHTML = `<p class='chat_entry_c'>It's a tie, seeing who goes first...</p>`;
-      addGameNotification(chatHTML);
-      displayLatestMessage();
-      assignPlayers();
-      break;
-    case "displayNotification":
-      if (message.params === "W goes first") {
-        chatHTML = `<p class='chat_entry_c'><strong>${playerWName}</strong> goes first!</p>`;
-        addGameNotification(chatHTML);
-        displayLatestMessage();
-        currentPlayerTurn = "w";
-        applyTurnStyling();
-      } else if (message.params === "R goes first") {
-        chatHTML = `<p class='chat_entry_c'><strong>${playerRName}</strong> goes first!</p>`;
-        addGameNotification(chatHTML);
-        displayLatestMessage();
-        currentPlayerTurn = "r";
-        applyTurnStyling();
-      }
-  }
-}
 
 // TODO - See comment in this function
 // Sends a message to the iframe object from the window object
@@ -1072,7 +1014,10 @@ function rollOneDie(result) {
       return;
     }
     shrinkDiceResult();
-    sendMessageToGame({ method: "changeTurn", params: "playerR firstTurn" });
+    sendGameMessage({
+      method: "changeTurn",
+      params: "playerR firstTurn",
+    });
     const chatHTML3 = `<p class='chat_entry_c'><strong>${playerRName}'s</strong> turn!</p>`;
     addGameNotification(chatHTML3);
     displayLatestMessage();
@@ -1304,8 +1249,8 @@ function forfeitMessage() {
   chatHTML2 = `<p class='chat_entry_d'><strong>${opponentName}</strong> wins the game!</p>`;
   addGameNotification(chatHTML);
   addGameNotification(chatHTML2);
-  sendMessageToGame({ method: "forfeitMessage", params: chatHTML });
-  sendMessageToGame({ method: "forfeitMessage", params: chatHTML2 });
+  sendGameMessage({ method: "forfeitMessage", params: chatHTML });
+  sendGameMessage({ method: "forfeitMessage", params: chatHTML2 });
 }
 
 // Plays the set click sound for the webpage
@@ -1834,7 +1779,7 @@ function turnOneEnd() {
   diceFace2.style.opacity = 1;
   firstTurn = false;
   console.log(turnOneRolls);
-  sendMessageToGame({ method: "chooseFirstPlayer", params: turnOneRolls });
+  sendGameMessage({ method: "chooseFirstPlayer", params: turnOneRolls });
 }
 
 // Allows the diceResult element to shrink back down to its original size and style
@@ -2231,15 +2176,15 @@ function challengeSuccessful(opponentName) {
     challengeInformation.textContent = "Starting game...";
     challengeSection.style.backgroundColor = "green";
     buttonChallengeCancel.classList.add("hidden");
-    sendMessageToOpponent({
-      method: "challengeAccepted",
-      params: playerObjectHere,
-    });
+    // sendGameMessage({
+    //   method: "challengeAccepted",
+    //   params: playerObjectHere,
+    // });
     setTimeout(() => {
       console.log(`Opponent accepted challenge`);
       challengeSection.classList.add("no_pointer_events");
       challengeSection.classList.remove("show");
-      step3Process();
+      // step3Process();
     }, 2000);
   }
   if (challengeAccepted === false) {
@@ -2263,34 +2208,33 @@ function challengeSuccessful(opponentName) {
 function simulateChallengeAcceptance() {
   let result = Math.round(Math.random());
   if (result === 0) {
-    receiveMessageFromOpponent({
+    sendGameMessage({
       method: "challengeAccepted",
       params: opponentObjectHere,
     });
   } else {
-    receiveMessageFromOpponent({
+    sendGameMessage({
       method: "challengeRejected",
       params: opponentObjectHere,
     });
   }
 }
 
-function sendMessageToOpponent(message) {
+// TODO
+// Sends a turn change etc. message to the player and the opponent
+function sendGameMessage(message) {
+  window.postMessage(JSON.stringify(message), "*");
   console.log(`Sent to opponent: ${JSON.stringify(message)}`);
   console.log(`Message method: ${JSON.stringify(message.method)}`);
   console.log(`Message params: ${JSON.stringify(message.params)}`);
 }
 
-function receiveMessageFromOpponent(message) {
-  console.log(`Received from opponent: ${JSON.stringify(message)}`);
-  console.log(`Message method: ${JSON.stringify(message.method)}`);
-  console.log(`Message params: ${JSON.stringify(message.params)}`);
-  processMessageFromOpponent(message);
-}
-
-function processMessageFromOpponent(message) {
-  let opponentName;
+function receiveGameMessage(message) {
+  console.log(`Received message: ${JSON.stringify(message)}`);
+  let opponentName, chatHTML;
   switch (message.method) {
+    // TODO
+    // Build something in like if current player is the challenger the code does something, otherwise it doesn't. This means both players can receive the same message but only the challenger needs to do anything about it?
     case "challengeAccepted":
       console.log(JSON.stringify(message.params.displayName));
       challengeAccepted = true;
@@ -2305,11 +2249,43 @@ function processMessageFromOpponent(message) {
       opponentName = message.params.displayName;
       challengeSuccessful(opponentName);
       break;
+    case "gameState":
+      console.log(message.params);
+      changeGameState(message.params);
+      break;
+    case "1DieResult":
+      console.log(message.params);
+      rollOneDie(message.params);
+      break;
+    case "2DiceResult":
+      console.log(message.params);
+      rollTwoDice(message.params);
+      break;
+    case "rollResultDraw":
+      chatHTML = `<p class='chat_entry_c'>It's a tie, seeing who goes first...</p>`;
+      addGameNotification(chatHTML);
+      displayLatestMessage();
+      assignPlayers();
+      break;
+    case "displayNotification":
+      if (message.params === "W goes first") {
+        chatHTML = `<p class='chat_entry_c'><strong>${playerWName}</strong> goes first!</p>`;
+        addGameNotification(chatHTML);
+        displayLatestMessage();
+        currentPlayerTurn = "w";
+        applyTurnStyling();
+      } else if (message.params === "R goes first") {
+        chatHTML = `<p class='chat_entry_c'><strong>${playerRName}</strong> goes first!</p>`;
+        addGameNotification(chatHTML);
+        displayLatestMessage();
+        currentPlayerTurn = "r";
+        applyTurnStyling();
+      }
   }
 }
 
 function challengeReceivedProcessing() {
-  receiveMessageFromOpponent({
+  sendGameMessage({
     method: "challengeSent",
     params: opponentObjectHere,
   });

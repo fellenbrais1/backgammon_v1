@@ -81,12 +81,12 @@ function changeGameState(state) {
   sendMessageToWebpage(gameStateMessage);
 }
 
-function rollOnce() {
+export function rollOnce() {
   const result = board.throwDice(1);
   return result;
 }
 
-function rollTwice() {
+export function rollTwice() {
   const result = board.throwDice(2);
   return result;
 }
