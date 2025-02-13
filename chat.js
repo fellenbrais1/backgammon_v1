@@ -1,8 +1,7 @@
 let peer;
 
-console.log("Using Firebase in app.js:", parent.firebaseApp);
+console.log("Using Firebase in chat.js:", parent.firebaseApp);
 const database = parent.database;
-console.log(database);
 
 document.addEventListener("DOMContentLoaded", () => {
   peer = new peer({

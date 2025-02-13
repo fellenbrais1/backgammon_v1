@@ -3,7 +3,29 @@
 
 "use strict";
 
+import { startGame } from "./app.js";
+
 console.log(`Backgammon page script V4`);
+
+// const contentContainer = document.getElementById("content_container");
+
+// contentContainer.addEventListener("load", () => {
+//   // Listen for messages from the game:
+//   window.addEventListener("messageFromGame", (event) => {
+//     console.log("Main page received message:", event.detail);
+//     // Handle message from the game
+//   });
+// });
+
+// function sendMessageToGame(message) {
+//   if (contentContainer.contentWindow) {
+//     const event = new CustomEvent("messageToGame", {
+//       type: message.type,
+//       params: message.params,
+//     });
+//     contentContainer.contentWindow.dispatchEvent(event); // Dispatch the event on the window object
+//   }
+// }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -30,8 +52,8 @@ const gameStartButtonChallenge = document.querySelector(
 
 // Game board elements
 const gameBoard = document.querySelector(".game_board");
-const imbedGame = document.getElementById("imbed_game");
-const iframe = document.getElementById("imbed_game");
+const imbedGame = document.getElementById("content_container");
+// const iframe = document.getElementById("imbed_game");
 
 // Forfeit section elements
 const forfeitSection = document.querySelector(".forfeit_section");
@@ -184,7 +206,7 @@ const number12 = document.getElementById("number12");
 // VARIABLES
 
 // BOARD SECTION VARIABLES
-const iframeWindow = iframe.contentWindow;
+// const iframeWindow = iframe.contentWindow;
 
 // FORFEIT SECTION VARIABLES
 // Game reset lists
@@ -714,7 +736,7 @@ buttonForfeitYes.addEventListener("click", () => {
         showMain();
         resetDice();
       }, 1000);
-      sendMessageToIframe({ method: "resetBoard", params: "none" });
+      sendMessageToOpponent({ method: "resetBoard", params: "none" });
     }, 5000);
   });
 });
@@ -858,9 +880,9 @@ floatingButtonsToggle.addEventListener("click", () => {
 // DICE SECTION LISTENERS
 diceRollResult.addEventListener("click", () => {
   if (firstTurn) {
-    sendMessageToIframe({ method: "rollOnce", params: "none" });
+    sendMessageToGame({ method: "rollOnce", params: "none" });
   } else {
-    sendMessageToIframe({ method: "rollTwice", params: "none" });
+    sendMessageToGame({ method: "rollTwice", params: "none" });
   }
 });
 
@@ -905,12 +927,12 @@ simulateChallengeButton.addEventListener("click", () => {
 // Called whenever the iframe object sends a message to the window object
 window.addEventListener("message", (event) => {
   const receivedMessage = JSON.parse(event.data);
-  handleMessageFromIframe(receivedMessage);
+  handleMessageFromOpponent(receivedMessage);
 });
 
 // Triggers various functions based on the content of a message received from the iframe object
 // Called by an eventListener on the window object
-function handleMessageFromIframe(message) {
+function handleMessageFromOpponent(message) {
   console.log("Webpage received:", message);
   let chatHTML;
   switch (message.method) {
@@ -952,9 +974,9 @@ function handleMessageFromIframe(message) {
 // TODO - See comment in this function
 // Sends a message to the iframe object from the window object
 // Called by
-function sendMessageToIframe(message) {
-  iframeWindow.postMessage(message, "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
-}
+// function sendMessageToIframe(message) {
+//   imbedGame.postMessage(message, "*"); // '*' means any origin can receive.  For production, specify the exact origin of the iframe.
+// }
 
 // MAIN DISPLAY FUNCTIONS
 
@@ -1050,7 +1072,7 @@ function rollOneDie(result) {
       return;
     }
     shrinkDiceResult();
-    sendMessageToIframe({ method: "changeTurn", params: "playerR firstTurn" });
+    sendMessageToGame({ method: "changeTurn", params: "playerR firstTurn" });
     const chatHTML3 = `<p class='chat_entry_c'><strong>${playerRName}'s</strong> turn!</p>`;
     addGameNotification(chatHTML3);
     displayLatestMessage();
@@ -1282,8 +1304,8 @@ function forfeitMessage() {
   chatHTML2 = `<p class='chat_entry_d'><strong>${opponentName}</strong> wins the game!</p>`;
   addGameNotification(chatHTML);
   addGameNotification(chatHTML2);
-  sendMessageToIframe({ method: "forfeitMessage", params: chatHTML });
-  sendMessageToIframe({ method: "forfeitMessage", params: chatHTML2 });
+  sendMessageToGame({ method: "forfeitMessage", params: chatHTML });
+  sendMessageToGame({ method: "forfeitMessage", params: chatHTML2 });
 }
 
 // Plays the set click sound for the webpage
@@ -1812,7 +1834,7 @@ function turnOneEnd() {
   diceFace2.style.opacity = 1;
   firstTurn = false;
   console.log(turnOneRolls);
-  sendMessageToIframe({ method: "chooseFirstPlayer", params: turnOneRolls });
+  sendMessageToGame({ method: "chooseFirstPlayer", params: turnOneRolls });
 }
 
 // Allows the diceResult element to shrink back down to its original size and style
@@ -1912,11 +1934,10 @@ function step3Process() {
     adNotification.classList.add("show");
     setTimeout(() => {
       imbedGame.classList.add("show");
-      imbedGame.classList.remove("hidden");
       imbedGame.classList.remove("no_pointer_events");
     }, 1000);
     setTimeout(() => {
-      sendMessageToIframe({ method: "startGame", params: "none" });
+      startGame();
     }, 1000);
     const displayName = playerNameForm.value;
     const chatHTML = `<p class='chat_entry_c'>Welcome <strong>${displayName}!</strong></p>`;
@@ -2024,7 +2045,7 @@ const resetSiteAddNoPointerEvents = [
   otherGamesSection,
   adSection,
   forfeitSection,
-  iframe,
+  imbedGame,
 ];
 
 const greyOutButtons = [forfeitButton, settingsButton, playersButton];

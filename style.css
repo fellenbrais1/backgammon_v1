@@ -60,16 +60,16 @@ html {
   z-index: 7;
 }
 
-#imbed_game {
+#content_container {
   position: absolute;
   top: 60px;
   left: 140px;
   height: 100%;
   width: 100%;
-  border: solid 2px white;
-  border-radius: 25px;
   z-index: 9999;
   transition: opacity 2s ease-in-out;
+  /* pointer-events: none; */
+  opacity: 0;
 }
 
 .grey_overlay {
@@ -359,20 +359,13 @@ html {
   cursor: default;
 }
 
-.piece {
+.player1_piece,
+.player2_piece {
   width: 36px;
   height: 36px;
   border-radius: 50%;
   margin-top: 3px;
   border: 1px solid black;
-}
-
-.piece_red {
-  background-color: rgb(232, 10, 10);
-}
-
-.piece_white {
-  background-color: rgb(255, 253, 208);
 }
 
 .player_level {
@@ -1309,6 +1302,10 @@ html {
 }
 
 .show {
+  opacity: 1;
+}
+
+#content_container.show {
   opacity: 1;
 }
 

@@ -9,6 +9,7 @@
     <title>Fresh Version</title>
     <!-- STYLESHEETS -->
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="gameBoardStyle.css" />
     <!-- FAVICON -->
     <link
       rel="apple-touch-icon"
@@ -33,16 +34,102 @@
     <!-- MAIN PAGE ELEMENTS -->
     <div id="overlay"></div>
     <div class="pagebox">
-      <!-- MAIN GAMEBOX -->
+      <!-- MAIN DISPLAY -->
       <div class="main_display">
         <!-- GAME BOARD -->
-        <iframe
-          id="imbed_game"
-          class="hidden no_pointer_events"
+        <div
+          id="content_container"
+          class="no_pointer_events"
           title="Backgammon Game"
-          src="game_logic/index.html"
-          style="width: 100%; border: none; width: 100%"
-        ></iframe>
+        >
+          <div id="board">
+            <div id="highlight13" class="highlight highlight_top"></div>
+            <div id="highlight14" class="highlight highlight_top"></div>
+            <div id="highlight15" class="highlight highlight_top"></div>
+            <div id="highlight16" class="highlight highlight_top"></div>
+            <div id="highlight17" class="highlight highlight_top"></div>
+            <div id="highlight18" class="highlight highlight_top"></div>
+            <div id="highlight19" class="highlight highlight_top"></div>
+            <div id="highlight20" class="highlight highlight_top"></div>
+            <div id="highlight21" class="highlight highlight_top"></div>
+            <div id="highlight22" class="highlight highlight_top"></div>
+            <div id="highlight23" class="highlight highlight_top"></div>
+            <div id="highlight24" class="highlight highlight_top"></div>
+            <div id="highlight12" class="highlight highlight_bottom"></div>
+            <div id="highlight11" class="highlight highlight_bottom"></div>
+            <div id="highlight10" class="highlight highlight_bottom"></div>
+            <div id="highlight9" class="highlight highlight_bottom"></div>
+            <div id="highlight8" class="highlight highlight_bottom"></div>
+            <div id="highlight7" class="highlight highlight_bottom"></div>
+            <div id="highlight6" class="highlight highlight_bottom"></div>
+            <div id="highlight5" class="highlight highlight_bottom"></div>
+            <div id="highlight4" class="highlight highlight_bottom"></div>
+            <div id="highlight3" class="highlight highlight_bottom"></div>
+            <div id="highlight2" class="highlight highlight_bottom"></div>
+            <div id="highlight1" class="highlight highlight_bottom"></div>
+
+            <!-- Backgammon pieces -->
+            <div id="w15" class="piece piece_white" data-type="w"></div>
+            <div class="piece piece_white" id="w14" data-type="w"></div>
+            <div class="piece piece_red" id="r15" data-type="r"></div>
+            <div class="piece piece_red" id="r14" data-type="r"></div>
+            <div class="piece piece_red" id="r13" data-type="r"></div>
+            <div class="piece piece_red" id="r12" data-type="r"></div>
+            <div class="piece piece_red" id="r11" data-type="r"></div>
+            <div class="piece piece_red" id="r10" data-type="r"></div>
+            <div class="piece piece_red" id="r9" data-type="r"></div>
+            <div class="piece piece_red" id="r8" data-type="r"></div>
+            <div class="piece piece_white" id="w13" data-type="w"></div>
+            <div class="piece piece_white" id="w12" data-type="w"></div>
+            <div class="piece piece_white" id="w11" data-type="w"></div>
+            <div class="piece piece_white" id="w10" data-type="w"></div>
+            <div class="piece piece_white" id="w9" data-type="w"></div>
+            <div class="piece piece_red" id="r7" data-type="r"></div>
+            <div class="piece piece_red" id="r6" data-type="r"></div>
+            <div class="piece piece_red" id="r5" data-type="r"></div>
+            <div class="piece piece_red" id="r4" data-type="r"></div>
+            <div class="piece piece_red" id="r3" data-type="r"></div>
+            <div class="piece piece_white" id="w8" data-type="w"></div>
+            <div class="piece piece_white" id="w7" data-type="w"></div>
+            <div class="piece piece_white" id="w6" data-type="w"></div>
+            <div class="piece piece_white" id="w5" data-type="w"></div>
+            <div class="piece piece_white" id="w4" data-type="w"></div>
+            <div class="piece piece_white" id="w3" data-type="w"></div>
+            <div class="piece piece_white" id="w2" data-type="w"></div>
+            <div class="piece piece_white" id="w1" data-type="w"></div>
+            <div class="piece piece_red" id="r2" data-type="r"></div>
+            <div class="piece piece_red" id="r1" data-type="r"></div>
+
+            <!-- Point occupied numbers -->
+            <div class="piece-number-overlay" id="pieceNumber1"></div>
+            <div class="piece-number-overlay" id="pieceNumber2"></div>
+            <div class="piece-number-overlay" id="pieceNumber3"></div>
+            <div class="piece-number-overlay" id="pieceNumber4"></div>
+            <div class="piece-number-overlay" id="pieceNumber5"></div>
+            <div class="piece-number-overlay" id="pieceNumber6"></div>
+            <div class="piece-number-overlay" id="pieceNumber7"></div>
+            <div class="piece-number-overlay" id="pieceNumber8"></div>
+            <div class="piece-number-overlay" id="pieceNumber9"></div>
+            <div class="piece-number-overlay" id="pieceNumber10"></div>
+            <div class="piece-number-overlay" id="pieceNumber11"></div>
+            <div class="piece-number-overlay" id="pieceNumber12"></div>
+            <div class="piece-number-overlay" id="pieceNumber13"></div>
+            <div class="piece-number-overlay" id="pieceNumber14"></div>
+            <div class="piece-number-overlay" id="pieceNumber15"></div>
+            <div class="piece-number-overlay" id="pieceNumber16"></div>
+            <div class="piece-number-overlay" id="pieceNumber17"></div>
+            <div class="piece-number-overlay" id="pieceNumber18"></div>
+            <div class="piece-number-overlay" id="pieceNumber19"></div>
+            <div class="piece-number-overlay" id="pieceNumber20"></div>
+            <div class="piece-number-overlay" id="pieceNumber21"></div>
+            <div class="piece-number-overlay" id="pieceNumber22"></div>
+            <div class="piece-number-overlay" id="pieceNumber23"></div>
+            <div class="piece-number-overlay" id="pieceNumber24"></div>
+            <div class="piece-number-overlay" id="pieceNumber25"></div>
+            <div class="piece-number-overlay" id="pieceNumber26"></div>
+          </div>
+        </div>
+        <!-- INTRO ELEMENTS -->
         <div class="intro_display">
           <p class="intro_text">Backgammon</p>
           <img
@@ -160,7 +247,7 @@
         />
         <p class="name_player1">Guest</p>
         <div class="player_level">
-          <div class="piece piece_white"></div>
+          <div class="player1_piece piece_white"></div>
           <p class="player_rating1">0</p>
         </div>
       </section>
@@ -173,7 +260,7 @@
         />
         <p class="name_player2">Guest</p>
         <div class="player_level">
-          <div class="piece piece_red"></div>
+          <div class="player2_piece piece_red"></div>
           <p class="player_rating2">0</p>
         </div>
       </section>
@@ -678,27 +765,80 @@
         </button>
       </aside>
     </div>
-    <!-- SOUNDS -->
-    <audio id="button_click_sound" src="sound/mouse_click.wav"></audio>
-    <audio id="opening_jingle" src="sound/jingle.wav"></audio>
-    <audio id="pieces_deal" src="sound/pieces_deal.wav"></audio>
-    <audio id="arrow_spinning" src="sound/spinning.wav"></audio>
-    <audio id="dice_roll_sound" src="sound/rolling-dice-2-102706.mp3"></audio>
-    <audio id="number1" src="sound/number1.wav"></audio>
-    <audio id="number2" src="sound/number2.wav"></audio>
-    <audio id="number3" src="sound/number3.wav"></audio>
-    <audio id="number4" src="sound/number4.wav"></audio>
-    <audio id="number5" src="sound/number5.wav"></audio>
-    <audio id="number6" src="sound/number6.wav"></audio>
-    <audio id="number7" src="sound/number7.wav"></audio>
-    <audio id="number8" src="sound/number8.wav"></audio>
-    <audio id="number9" src="sound/number9.wav"></audio>
-    <audio id="number10" src="sound/number10.wav"></audio>
-    <audio id="number11" src="sound/number11.wav"></audio>
-    <audio id="number12" src="sound/number12.wav"></audio>
-    <audio id="chat_sound" src="sound/chat_notification.wav"></audio>
+    <!-- PAGE SOUNDS -->
+    <audio id="button_click_sound" src="./sound/mouse_click.wav"></audio>
+    <audio id="opening_jingle" src="./sound/jingle.wav"></audio>
+    <!-- GAME SOUNDS -->
+    <audio id="pieces_deal" src="./sound/pieces_deal.wav"></audio>
+    <audio id="piece_pickup" src="./sound/piecePickup.mp3"></audio>
+    <audio id="piece_putdown" src="./sound/piecePutdown.wav"></audio>
+    <audio id="pieces_deal" src="./sound/pieces_deal.wav"></audio>
+    <audio id="arrow_spinning" src="./sound/spinning.wav"></audio>
+    <audio id="dice_roll_sound" src="./sound/rolling-dice-2-102706.mp3"></audio>
+    <!-- SPEECH SOUNDS-->
+    <audio id="number1" src="./sound/number1.wav"></audio>
+    <audio id="number2" src="./sound/number2.wav"></audio>
+    <audio id="number3" src="./sound/number3.wav"></audio>
+    <audio id="number4" src="./sound/number4.wav"></audio>
+    <audio id="number5" src="./sound/number5.wav"></audio>
+    <audio id="number6" src="./sound/number6.wav"></audio>
+    <audio id="number7" src="./sound/number7.wav"></audio>
+    <audio id="number8" src="./sound/number8.wav"></audio>
+    <audio id="number9" src="./sound/number9.wav"></audio>
+    <audio id="number10" src="./sound/number10.wav"></audio>
+    <audio id="number11" src="./sound/number11.wav"></audio>
+    <audio id="number12" src="./sound/number12.wav"></audio>
+    <audio id="challenge_sound" src="./sound/chat_notification.wav"></audio>
     <!-- SCRIPTS -->
-    <script src="script.js"></script>
+    <script src="./script.js" type="module" defer></script>
+    <script src="./app.js" type="module" defer></script>
+    <!-- <script src="./chat.js" type="module" defer></script> -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script>
+      // Initialize Firebase using the compat version
+      const firebaseConfig = {
+        apiKey: "AIzaSyDjRxMuNLPRmXuBb2t7OUvLzbjgIatNMJg",
+        authDomain: "backgammon-b1e25.firebaseapp.com",
+        projectId: "backgammon-b1e25",
+        storageBucket: "backgammon-b1e25.firebasestorage.app",
+        messagingSenderId: "933438650220",
+        appId: "1:933438650220:web:7cfd8f56a2aef998e46549",
+        measurementId: "G-ST0Z166K8V",
+      };
+
+      parent.firebaseApp = firebase.initializeApp(firebaseConfig);
+      parent.analytics = firebase.analytics();
+      parent.database = firebase.database();
+
+      console.log("Firebase initialized successfully.");
+    </script>
+    <!-- <script src="./game_logic/scripts/chat.js" defer></script> -->
+    <!-- <script>
+      fetch("./game_logic/index.html")
+        .then((response) => response.text())
+        .then((html) => {
+          const container = document.getElementById("content_container");
+          container.innerHTML = html;
+
+          // const script = document.createElement("script");
+          // script.src = "/content/scripts/app.js";
+          // script.async = true;
+          // document.body.appendChild(script);
+          // container.querySelectorAll("script").forEach((oldScript) => {
+          //   const newScript = document.createElement("script");
+          //   if (oldScript.src) {
+          //     newScript.src = oldScript.src; // Reload external scripts
+          //     newScript.async = true;
+          //   } else {
+          //     newScript.textContent = oldScript.textContent; // Run inline scripts
+          //   }
+          //   document.body.appendChild(newScript); // Add to DOM
+          // });
+        })
+        .catch((error) => console.error("Error loading content:", error));
+    </script> -->
   </body>
 </html>
 <!-- CODE END -->

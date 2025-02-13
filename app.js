@@ -1,17 +1,14 @@
+// CODE START //
+
 const PIECE_RADIUS = 18;
 const PIECE_DIAMETER = PIECE_RADIUS + PIECE_RADIUS;
 const VERTICAL_TOLERANCE = 4;
 
 const pieces = document.querySelectorAll(".piece");
-// const coordsField = document.querySelector("#coords");
-// const pointField = document.querySelector("#point");
-// const startingField = document.querySelector("#starting");
-
-// let region, point;
 
 console.log("Using Firebase in app.js:", parent.firebaseApp);
 const db = parent.database;
-console.log(db);
+// console.log(db);
 
 // SOUNDS
 const piecesDeal = document.getElementById("pieces_deal");
@@ -22,22 +19,16 @@ const piecePutdown = document.getElementById("piece_putdown");
 const boardElement = document.getElementById("board");
 const boardLeftOffset = boardElement.getBoundingClientRect().left;
 const boardTopOffset = boardElement.getBoundingClientRect().top;
-// console.log(
-//   "boardLeftOffset = ",
-//   boardLeftOffset,
-//   ", boardTopOffset = ",
-//   boardTopOffset
-// );
 
-let gameState = "start";
+let gameState2 = "start";
 // let firstTurn = true;
 
 // let player1, player2;
 
-boardElement.addEventListener("click", () => {
-  const result = assignPlayers();
-  console.log(result);
-});
+// boardElement.addEventListener("click", () => {
+//   const result = assignPlayers();
+//   console.log(result);
+// });
 
 // let gamePlayers;
 
@@ -53,43 +44,37 @@ function assignPlayers() {
 function changeGameState(state) {
   switch (state) {
     case "setup":
-      gameState = "setup";
+      gameState2 = "setup";
       break;
     case "playerW firstTurn":
-      gameState = "playerW firstTurn";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+      gameState2 = "playerW firstTurn";
       break;
     case "playerR firstTurn":
-      gameState = "playerR firstTurn";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+      gameState2 = "playerR firstTurn";
       break;
     case "chooseFirstPlayer":
       break;
     // const diceRolls =
     case "playerW roll":
-      gameState = "playerW roll";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+      gameState2 = "playerW roll";
       break;
     case "playerW move":
-      gameState = "playerW move";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+      gameState2 = "playerW move";
       break;
     case "playerR roll":
-      gameState = "playerR roll";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+      gameState2 = "playerR roll";
       break;
     case "playerR move":
-      gameState = "playerR move";
-      // activePlayer = activePlayer === "w" ? "r" : "w";
+      gameState2 = "playerR move";
       break;
     case "end win":
-      gameState = "end win";
+      gameState2 = "end win";
       break;
     case "end forfeit":
-      gameState = "end forfeit";
+      gameState2 = "end forfeit";
       break;
   }
-  const gameStateMessage = { method: "gameState", params: gameState };
+  const gameStateMessage = { method: "gameState", params: gameState2 };
   sendMessageToWebpage(gameStateMessage);
 }
 
@@ -144,9 +129,9 @@ const board = {
 
   onTheMove: "", // piece id that is currently on the move
 
-  // populate dice throws
+  // Populate dice throws
   throwDice(numberOfDice) {
-    // clear previous throw
+    // Clear previous throw
     this.diceThrows.fill(0);
 
     if (numberOfDice == 1) {
@@ -336,86 +321,92 @@ function handleMessageFromParent(message) {
   }
 }
 
-function startGame() {
+export function startGame() {
   piecesDeal.play();
   board.resetBoard();
+  setupEvents();
   drawBoard();
+  boardElement.addEventListener("click", () => {
+    const result = assignPlayers();
+    console.log(result);
+  });
   assignPlayers();
 }
 
-// Install event listeners on each piece
-pieces.forEach((piece) => {
-  piece.addEventListener("mousedown", (e) => {
-    // const type = piece.dataset.type;
+function setupEvents() {
+  // Install event listeners on each piece
+  pieces.forEach((piece) => {
+    piece.addEventListener("mousedown", (e) => {
+      // const type = piece.dataset.type;
 
-    // which piece?
-    piecePickup.play();
-    const x = piece.offsetLeft + PIECE_RADIUS;
-    const y = piece.offsetTop + PIECE_RADIUS;
-    console.log(x, y);
-    const { pt, pos } = mapper.findPointAndPos(x, y);
-    console.log("Grabbed at pt = ", pt, " pos = ", pos);
+      // which piece?
+      piecePickup.play();
+      const x = piece.offsetLeft + PIECE_RADIUS;
+      const y = piece.offsetTop + PIECE_RADIUS;
+      console.log(x, y);
+      const { pt, pos } = mapper.findPointAndPos(x, y);
+      console.log("Grabbed at pt = ", pt, " pos = ", pos);
 
-    console.log(`piece X: ${x}, Y: ${y}`);
-    // startingField.value = "[" + pt + "," + pos + "]";
+      console.log(`piece X: ${x}, Y: ${y}`);
+      // startingField.value = "[" + pt + "," + pos + "]";
 
-    if (!isPieceMovable(piece, pt, pos)) {
-      // Prevent moving piece
-      console.log("Movement disallowed.");
-      return; // Exit the handler
-    }
+      if (!isPieceMovable(piece, pt, pos)) {
+        // Prevent moving piece
+        console.log("Movement disallowed.");
+        return; // Exit the handler
+      }
 
-    // Bring the current piece to the front
-    piece.style.zIndex = "1000"; // Set a high z-index value
+      // Bring the current piece to the front
+      piece.style.zIndex = "1000"; // Set a high z-index value
 
-    let point = identifyPoint(e.pageX, e.pageY);
-    currentMove.player = activePlayer;
-    currentMove.from = point;
-    currentMove.to = 0;
+      let point = identifyPoint(e.pageX, e.pageY);
+      currentMove.player = activePlayer;
+      currentMove.from = point;
+      currentMove.to = 0;
 
-    // record the piece as being 'on the move'
-    board.onTheMove = piece.id;
-    board.contents[point].occupied.pop();
-    board.updatePointOccupation(point);
+      // record the piece as being 'on the move'
+      board.onTheMove = piece.id;
+      board.contents[point].occupied.pop();
+      board.updatePointOccupation(point);
 
-    // startingField.value = "[" + point + "]";
+      // startingField.value = "[" + point + "]";
 
-    // Store the starting position
-    let startX = piece.style.left || "0px";
-    let startY = piece.style.top || "0px";
+      // Store the starting position
+      let startX = piece.style.left || "0px";
+      let startY = piece.style.top || "0px";
 
-    const onMouseMove = (event) => {
-      piece.style.left =
-        event.pageX - piece.offsetWidth / 2 - boardLeftOffset + "px";
-      piece.style.top =
-        event.pageY - piece.offsetHeight / 2 - boardTopOffset + "px";
-      // coordsField.value = event.pageX + ", " + event.pageY;
-      let point = identifyPoint(event.pageX, event.pageY);
-      // pointField.value = point;
-      applyHighlight(point, 1);
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-
-    piece.addEventListener(
-      "mouseup",
-      (event) => {
-        piecePutdown.play();
-        console.log("startX = " + startX + ", startY = " + startY);
-        document.removeEventListener("mousemove", onMouseMove);
-        piece.style.zIndex = "";
-        applyHighlight(0, 0);
-
+      const onMouseMove = (event) => {
+        piece.style.left =
+          event.pageX - piece.offsetWidth / 2 - boardLeftOffset + "px";
+        piece.style.top =
+          event.pageY - piece.offsetHeight / 2 - boardTopOffset + "px";
+        // coordsField.value = event.pageX + ", " + event.pageY;
         let point = identifyPoint(event.pageX, event.pageY);
-        currentMove.to = point;
-        console.log(currentMove);
+        // pointField.value = point;
+        applyHighlight(point, 1);
+      };
+      document.addEventListener("mousemove", onMouseMove);
 
-        applyMove(piece, currentMove);
-      },
-      { once: true }
-    );
+      piece.addEventListener(
+        "mouseup",
+        (event) => {
+          piecePutdown.play();
+          console.log("startX = " + startX + ", startY = " + startY);
+          document.removeEventListener("mousemove", onMouseMove);
+          piece.style.zIndex = "";
+          applyHighlight(0, 0);
+
+          let point = identifyPoint(event.pageX, event.pageY);
+          currentMove.to = point;
+          console.log(currentMove);
+
+          applyMove(piece, currentMove);
+        },
+        { once: true }
+      );
+    });
   });
-});
+}
 
 async function applyMove(piece, move) {
   // either snap or return depending on move legality
@@ -873,3 +864,5 @@ function isPieceMovable(piece, pt, pos) {
 //   });
 //   startGame();
 // });
+
+// startGame();
