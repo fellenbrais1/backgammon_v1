@@ -866,6 +866,7 @@ diceRollResult.addEventListener("click", () => {
     const roll = rollTwice();
     console.log(roll);
     sendGameMessage({ method: "2DiceResult", params: roll });
+    rollTwoDice(roll);
   }
 });
 
@@ -2231,7 +2232,7 @@ function sendGameMessage(message) {
 
 function receiveGameMessage(message) {
   console.log(`Received message: ${JSON.stringify(message)}`);
-  let opponentName, chatHTML;
+  let opponentName, chatHTML, firstTurnRollResults;
   switch (message.method) {
     // TODO
     // Build something in like if current player is the challenger the code does something, otherwise it doesn't. This means both players can receive the same message but only the challenger needs to do anything about it?
@@ -2255,11 +2256,37 @@ function receiveGameMessage(message) {
       break;
     case "1DieResult":
       console.log(message.params);
-      rollOneDie(message.params);
+      // rollOneDie(message.params);
+      break;
+    case "chooseFirstPlayer":
+      firstTurnRollResults = message.params;
+      console.log(firstTurnRollResults);
+      console.log(firstTurnRollResults[0]);
+      console.log(firstTurnRollResults[1]);
+      if (firstTurnRollResults[0] === firstTurnRollResults[1]) {
+        sendGameMessage({ method: "rollResultDraw", params: "none" });
+      }
+      if (firstTurnRollResults[0] > firstTurnRollResults[1]) {
+        console.log(`W goes first`);
+        changeGameState("playerW roll");
+        sendGameMessage({
+          method: "displayNotification",
+          params: "W goes first",
+        });
+        sendGameMessage({ method: "gameState", params: "playerW roll" });
+      } else if (firstTurnRollResults[0] < firstTurnRollResults[1]) {
+        console.log(`R goes first`);
+        changeGameState("playerR roll");
+        sendGameMessage({
+          method: "displayNotification",
+          params: "R goes first",
+        });
+        sendGameMessage({ method: "gameState", params: "playerR roll" });
+      }
       break;
     case "2DiceResult":
       console.log(message.params);
-      rollTwoDice(message.params);
+      // rollTwoDice(message.params);
       break;
     case "rollResultDraw":
       chatHTML = `<p class='chat_entry_c'>It's a tie, seeing who goes first...</p>`;
