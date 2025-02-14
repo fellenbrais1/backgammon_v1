@@ -1,7 +1,7 @@
 // CODE START
 "use strict";
 
-// IMPPORTS
+// IMPORTS
 import { apiKey } from "./config.js";
 
 const firebaseConfig = {
