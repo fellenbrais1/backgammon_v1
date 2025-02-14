@@ -1,8 +1,10 @@
 // CODE START
 "use strict";
 
+import { apiKey } from "./config.js";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDjRxMuNLPRmXuBb2t7OUvLzbjgIatNMJg",
+  apiKey: apiKey,
   authDomain: "backgammon-b1e25.firebaseapp.com",
   projectId: "backgammon-b1e25",
   storageBucket: "backgammon-b1e25.firebasestorage.app",
