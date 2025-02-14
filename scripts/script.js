@@ -214,8 +214,8 @@ const hideElementsList = [
   buttonForfeitYes,
   buttonForfeitNo,
   forfeitXButton,
-  gameBoard,
-  introDisplay,
+  // gameBoard,
+  // introDisplay,
   gameStartButtonChallenge,
   playerNameForm,
   step2Elements,
@@ -256,18 +256,17 @@ const helperContent3 = `<svg
   viewBox="0 0 24 24"
   xmlns="http://www.w3.org/2000/svg"
 >
-  <path d="M12.707 17.293l-1.414 1.414L4.586 12l6.707-6.707 1.414 1.414L8.414 11h9.586v2H8.414z" /> </svg><p>Click on the name of<br>an opponent, then on<br>the challenge button</p>
+  <path d="M12.707 17.293l-1.414 1.414L4.586 12l6.707-6.707 1.414 1.414L8.414 11h9.586v2H8.414z" /> </svg><p>Click on the name of an opponent, then<br>click on the challenge button</p>
           <svg
-            fill="#FFFFFF"
-            width="60px"
-            height="60px"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"
-            />
-          </svg>`;
+          class="helper_svg"
+  fill="#FFFFFF"
+  width="60px"
+  height="60px"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg"
+  transform="rotate(90 12 12)"
+>
+  <path d="M12.707 17.293l-1.414 1.414L4.586 12l6.707-6.707 1.414 1.414L8.414 11h9.586v2H8.414z" /> </svg>`;
 
 // PLAYER SECTION VARIABLES
 let currentUserObject = "";
@@ -572,6 +571,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("load", () => {
   showMain();
+  imbedGame.classList.add("show");
+  imbedGame.classList.remove("no_pointer_events");
+  startGame();
   setInterval(imgAdCycler, 15000);
 });
 
@@ -926,10 +928,6 @@ window.addEventListener("message", (event) => {
 // Shows the pages main elements on load or a site reset event
 // Called by a window load event, eventHandlers on gameStartResetButton and buttonForfeitYes
 function showMain() {
-  setTimeout(() => {
-    gameBoard.classList.add("show");
-    // greyOverlay.classList.add("show");
-  }, 1000);
   setTimeout(() => {
     gamestartBox.classList.add("show");
     gamestartBox.classList.add("focus_element_thick");
@@ -1858,7 +1856,6 @@ function step3Process() {
     player2NameSection.classList.add("show");
     player2NameSection.classList.add("scroll_on");
     gamestartBox.classList.remove("show");
-    introDisplay.classList.add("hidden");
     diceSection.classList.add("show");
     diceSection.classList.add("scroll_on");
     diceSection.classList.add("focus_element_thick");
@@ -1878,13 +1875,13 @@ function step3Process() {
     helperBox.classList.add("removed");
     chatSection.classList.add("scroll_on");
     adNotification.classList.add("show");
-    setTimeout(() => {
-      imbedGame.classList.add("show");
-      imbedGame.classList.remove("no_pointer_events");
-    }, 1000);
-    setTimeout(() => {
-      startGame();
-    }, 1000);
+    // setTimeout(() => {
+    //   imbedGame.classList.add("show");
+    //   imbedGame.classList.remove("no_pointer_events");
+    // }, 1000);
+    // setTimeout(() => {
+    //   startGame();
+    // }, 1000);
     const displayName = playerNameForm.value;
     const chatHTML = `<p class='chat_entry_c'>Welcome <strong>${displayName}!</strong></p>`;
     postChatMessage(chatHTML, "afterbegin");
@@ -1970,16 +1967,16 @@ function changeTurn() {
 function changeHelper(step) {
   if (step === 1) {
     helperBox.innerHTML = helperContent1;
-    helperBox.classList.remove("pointer_step2");
-    helperBox.classList.remove("pointer_step3");
+    helperBox.classList.remove("helper_step2");
+    helperBox.classList.remove("helper_step3");
   } else if (step === 2) {
     helperBox.innerHTML = helperContent2;
-    helperBox.classList.remove("pointer_step3");
-    helperBox.classList.add("pointer_step2");
+    helperBox.classList.remove("helper_step3");
+    helperBox.classList.add("helper_step2");
   } else if (step === 3) {
     helperBox.innerHTML = helperContent3;
-    helperBox.classList.remove("pointer_step2");
-    helperBox.classList.add("pointer_step3");
+    helperBox.classList.remove("helper_step2");
+    helperBox.classList.add("helper_step3");
   }
 }
 

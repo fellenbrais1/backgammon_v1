@@ -36,182 +36,365 @@
     <div class="pagebox">
       <!-- MAIN DISPLAY -->
       <div class="main_display">
-        <!-- GAME BOARD -->
-        <div
-          id="content_container"
-          class="no_pointer_events"
-          title="Backgammon Game"
-        >
-          <div id="board">
-            <div id="highlight13" class="highlight highlight_top"></div>
-            <div id="highlight14" class="highlight highlight_top"></div>
-            <div id="highlight15" class="highlight highlight_top"></div>
-            <div id="highlight16" class="highlight highlight_top"></div>
-            <div id="highlight17" class="highlight highlight_top"></div>
-            <div id="highlight18" class="highlight highlight_top"></div>
-            <div id="highlight19" class="highlight highlight_top"></div>
-            <div id="highlight20" class="highlight highlight_top"></div>
-            <div id="highlight21" class="highlight highlight_top"></div>
-            <div id="highlight22" class="highlight highlight_top"></div>
-            <div id="highlight23" class="highlight highlight_top"></div>
-            <div id="highlight24" class="highlight highlight_top"></div>
-            <div id="highlight12" class="highlight highlight_bottom"></div>
-            <div id="highlight11" class="highlight highlight_bottom"></div>
-            <div id="highlight10" class="highlight highlight_bottom"></div>
-            <div id="highlight9" class="highlight highlight_bottom"></div>
-            <div id="highlight8" class="highlight highlight_bottom"></div>
-            <div id="highlight7" class="highlight highlight_bottom"></div>
-            <div id="highlight6" class="highlight highlight_bottom"></div>
-            <div id="highlight5" class="highlight highlight_bottom"></div>
-            <div id="highlight4" class="highlight highlight_bottom"></div>
-            <div id="highlight3" class="highlight highlight_bottom"></div>
-            <div id="highlight2" class="highlight highlight_bottom"></div>
-            <div id="highlight1" class="highlight highlight_bottom"></div>
-
-            <!-- Backgammon pieces -->
-            <div id="w15" class="piece piece_white" data-type="w"></div>
-            <div class="piece piece_white" id="w14" data-type="w"></div>
-            <div class="piece piece_red" id="r15" data-type="r"></div>
-            <div class="piece piece_red" id="r14" data-type="r"></div>
-            <div class="piece piece_red" id="r13" data-type="r"></div>
-            <div class="piece piece_red" id="r12" data-type="r"></div>
-            <div class="piece piece_red" id="r11" data-type="r"></div>
-            <div class="piece piece_red" id="r10" data-type="r"></div>
-            <div class="piece piece_red" id="r9" data-type="r"></div>
-            <div class="piece piece_red" id="r8" data-type="r"></div>
-            <div class="piece piece_white" id="w13" data-type="w"></div>
-            <div class="piece piece_white" id="w12" data-type="w"></div>
-            <div class="piece piece_white" id="w11" data-type="w"></div>
-            <div class="piece piece_white" id="w10" data-type="w"></div>
-            <div class="piece piece_white" id="w9" data-type="w"></div>
-            <div class="piece piece_red" id="r7" data-type="r"></div>
-            <div class="piece piece_red" id="r6" data-type="r"></div>
-            <div class="piece piece_red" id="r5" data-type="r"></div>
-            <div class="piece piece_red" id="r4" data-type="r"></div>
-            <div class="piece piece_red" id="r3" data-type="r"></div>
-            <div class="piece piece_white" id="w8" data-type="w"></div>
-            <div class="piece piece_white" id="w7" data-type="w"></div>
-            <div class="piece piece_white" id="w6" data-type="w"></div>
-            <div class="piece piece_white" id="w5" data-type="w"></div>
-            <div class="piece piece_white" id="w4" data-type="w"></div>
-            <div class="piece piece_white" id="w3" data-type="w"></div>
-            <div class="piece piece_white" id="w2" data-type="w"></div>
-            <div class="piece piece_white" id="w1" data-type="w"></div>
-            <div class="piece piece_red" id="r2" data-type="r"></div>
-            <div class="piece piece_red" id="r1" data-type="r"></div>
-
-            <!-- Point occupied numbers -->
-            <div class="piece-number-overlay" id="pieceNumber1"></div>
-            <div class="piece-number-overlay" id="pieceNumber2"></div>
-            <div class="piece-number-overlay" id="pieceNumber3"></div>
-            <div class="piece-number-overlay" id="pieceNumber4"></div>
-            <div class="piece-number-overlay" id="pieceNumber5"></div>
-            <div class="piece-number-overlay" id="pieceNumber6"></div>
-            <div class="piece-number-overlay" id="pieceNumber7"></div>
-            <div class="piece-number-overlay" id="pieceNumber8"></div>
-            <div class="piece-number-overlay" id="pieceNumber9"></div>
-            <div class="piece-number-overlay" id="pieceNumber10"></div>
-            <div class="piece-number-overlay" id="pieceNumber11"></div>
-            <div class="piece-number-overlay" id="pieceNumber12"></div>
-            <div class="piece-number-overlay" id="pieceNumber13"></div>
-            <div class="piece-number-overlay" id="pieceNumber14"></div>
-            <div class="piece-number-overlay" id="pieceNumber15"></div>
-            <div class="piece-number-overlay" id="pieceNumber16"></div>
-            <div class="piece-number-overlay" id="pieceNumber17"></div>
-            <div class="piece-number-overlay" id="pieceNumber18"></div>
-            <div class="piece-number-overlay" id="pieceNumber19"></div>
-            <div class="piece-number-overlay" id="pieceNumber20"></div>
-            <div class="piece-number-overlay" id="pieceNumber21"></div>
-            <div class="piece-number-overlay" id="pieceNumber22"></div>
-            <div class="piece-number-overlay" id="pieceNumber23"></div>
-            <div class="piece-number-overlay" id="pieceNumber24"></div>
-            <div class="piece-number-overlay" id="pieceNumber25"></div>
-            <div class="piece-number-overlay" id="pieceNumber26"></div>
-          </div>
-        </div>
-        <!-- INTRO ELEMENTS -->
-        <div class="intro_display">
-          <p class="intro_text">Backgammon</p>
-          <img
-            class="intro_image focus_element_thick"
-            src="img/bagammnon.png"
-            alt="Backgammon Logo"
-          />
-        </div>
-        <!-- GAMESTART BLOCK -->
-        <div class="gamestart_block">
-          <p class="gamestart_text step 1">1. Choose a game type</p>
-          <div class="gamestart_buttons">
-            <p class="gamestart_button_fun step1 no_pointer_events">Fun</p>
-          </div>
-          <p class="gamestart_text step2">2. Choose your identity:</p>
-          <div class="gamestart_identity_div step2">
-            <form class="gamestart_player_name no_pointer_events">
+        <div class="main_display_left">
+          <!-- PLAYERS SECTION -->
+          <section class="players_section">
+            <div class="player_filters">
+              <strong>FILTERS</strong>
+              <div class="filter_div">
+                <div class="toggle_online">
+                  <p>HIDE OFFLINE</p>
+                  <div class="toggle_online_graphic">
+                    <p class="slider_button"></p>
+                  </div>
+                </div>
+                <div class="toggle_free">
+                  <p>HIDE INGAME</p>
+                  <div class="toggle_free_graphic">
+                    <p class="slider_button"></p>
+                  </div>
+                </div>
+                <div class="toggle_language">
+                  <p>LANGUAGE</p>
+                  <div class="toggle_language_box">
+                    <p>ENGLISH</p>
+                    <svg
+                      class="language_selector_button"
+                      width="18px"
+                      height="18px"
+                      viewBox="0 0 48 48"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title>Select Language</title>
+                      <g id="Layer_2" data-name="Layer 2">
+                        <g id="invisible_box" data-name="invisible box">
+                          <rect width="48" height="48" fill="none" />
+                        </g>
+                        <g id="icons_Q2" data-name="icons Q2">
+                          <path
+                            d="M24,46A22,22,0,1,0,2,24,21.9,21.9,0,0,0,24,46ZM14.3,19.8A2.5,2.5,0,0,1,16,19H32a2.5,2.5,0,0,1,1.7.8,2.1,2.1,0,0,1-.4,2.7l-7.9,7.9a1.9,1.9,0,0,1-2.8,0l-7.9-7.9A2.1,2.1,0,0,1,14.3,19.8Z"
+                          />
+                        </g>
+                      </g>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="active_friends">
+              <strong>FRIENDS</strong>
+              <div class="players_display players_friends"></div>
+            </div>
+            <div class="active_played_before">
+              <strong>PLAYED BEFORE</strong>
+              <div class="players_display players_played_before"></div>
+            </div>
+            <div class="active_players">
+              <strong>CURRENTLY ACTIVE</strong>
+              <div class="players_display players_currently_active"></div>
+            </div>
+            <div class="players_x_button x_button no_pointer_events">X</div>
+          </section>
+          <!-- CHAT SECTION -->
+          <section class="chat_section">
+            <div class="chat_display"></div>
+            <form class="chat_form">
               <input
                 type="text"
-                id="gamestart_name_input"
-                placeholder=""
+                id="chat_input"
+                placeholder="Enter your message..."
                 aria-label="Chatbox Message Input"
                 autocomplete="off"
-                spellcheck="false"
               />
             </form>
-          </div>
-          <p class="gamestart_text step3">3. Challenge an opponent</p>
-          <div class="gamestart_opponent_div step3">
-            <p class="gamestart_opponent_name no_pointer_events"></p>
-            <p
-              class="gamestart_button_challenge no_pointer_events"
-              title="Challenge"
-            >
+          </section>
+          <!-- SETTINGS SECTION -->
+          <section class="settings_section no_pointer_events">
+            <div class="settings_info_div">
+              <p class="settings_title">SETTINGS</p>
+              <div class="settings_x_button x_button">X</div>
+            </div>
+          </section>
+          <!-- RULES SECTION -->
+          <section class="rules_section no_pointer_events">
+            <div class="rules_info">
+              <p><strong>RULES OF BACKGAMMON</strong></p>
+              <p><strong>ORIGIN</strong></p>
+              <p>
+                Backgammon evolved from ancient games such as Rome’s
+                <a
+                  href="https://www.britannica.com/sports/backgammon"
+                  target="_blank"
+                  title="History of backgammon"
+                  rel="noopener noreferrer"
+                  >Ludus Duodecim Scriptorum</a
+                >, making it over 5,000 years old. Thanks to such popularity,
+                it’s become the national game for eight countries, including
+                Egypt, Turkey, and Greece. What makes backgammon so compelling
+                (and worthy of worldwide tournaments) is its balance of chance
+                by incorporating dice rolls, and strategy. It’s also very easy
+                to learn and can scale in difficulty depending on who you’re
+                playing; so, finding the right backgammon opponent can be its
+                own fun challenge.
+              </p>
+              <p><strong>HOW TO PLAY</strong></p>
+              <p>
+                Backgammon is a two-player game where each player controls 15
+                pieces, aka “men” or checkers, one black and one white. The
+                first player to remove their pieces from the board wins.
+              </p>
+              <p>
+                A board consists of 24 arrow-shaped spaces, the colors split
+                into alternating rows. Six spaces, or “points,” take up each
+                quadrant. The home board for the white checkers is on a player’s
+                right, while the home board for the black checkers is on a
+                player’s left. The white checkers only move counterclockwise,
+                and the black checkers move clockwise.
+              </p>
+              <p>
+                Each player tries to move their 15 pieces around the board until
+                they can remove them from play by getting them to the edge of
+                the home board. Removing a piece is known as “bearing off.” The
+                starting position for all the pieces are as follows:
+              </p>
+              <div class="rules_image_box">
+                <img
+                  class="rules_backgammon"
+                  src="img/rules_backgammon.webp"
+                  alt="Backgammon Example Board"
+                />
+              </div>
+              <p>
+                Players move their checkers to their home quadrant to remove
+                them from play. The player’s home quadrant contains the six rows
+                in the quadrant originally occupied by their opponent’s two
+                checkers (opposite left for player one and opposite right for
+                player two).
+              </p>
+              <p><strong>MOVES AND RULES</strong></p>
+              <p>
+                Players each roll one die to see who goes first. The first
+                player moves spaces equal to the total of that first roll (their
+                die and their opponent’s). After that, players roll both their
+                own dice. Gamers move up to two pieces equal to the total of the
+                dice roll. If moving two pieces, each piece moves the same as a
+                number on a die. For example, if you roll a 2 and a 6, one piece
+                must move 2 and the other 6 (or 6 and then 2).
+              </p>
+              <ul>
+                <li>
+                  If you roll doubles, you can move that number four times.
+                </li>
+                <li>
+                  You <strong>can</strong> move to a space with only one of the
+                  opponent’s checkers. Your opponent’s piece is then bumped to
+                  the middle of the board, aka “jail” (which divides the four
+                  quadrants). In order to remove the piece from jail, they have
+                  to try to get the piece into their home quadrant on their next
+                  turn.
+                </li>
+                <li>
+                  To escape jail, the roll must include a die with the number of
+                  moves to a free space, following rules about blocked spaces,
+                  to return a checker to play. Otherwise, that player passes
+                  their turn.
+                </li>
+                <li>
+                  You <strong>cannot</strong> move a piece to a point where your
+                  opponent has at least two checkers.
+                </li>
+                <li>
+                  You <strong>cannot</strong> move the same piece twice if it
+                  would land on a blocked space at the end of a single die’s
+                  count. For example, if you roll a 3 and a 4 and both the third
+                  and fourth space are blocked, you cannot move your checker to
+                  the seventh space, even if it’s free.
+                </li>
+              </ul>
+              <p><strong>WINNING THE GAME</strong></p>
+              <p>
+                Once all 15 pieces are in your home quadrant, you can begin to
+                roll dice to move them off the board and onto the side of the
+                home board. You must roll at least the number of spaces plus one
+                to bear off. Remove all your pieces to win!
+              </p>
+            </div>
+            <div class="rules_x_button x_button">X</div>
+          </section>
+          <!-- OTHER GAMES SECTION -->
+          <section class="other_games_section no_pointer_events">
+            <div class="other_games_info">
+              <p>TRY SOME OF OUR OTHER GREAT GAMES</p>
+              <div class="other_games_display"></div>
+            </div>
+            <div class="other_games_x_button x_button">X</div>
+          </section>
+        </div>
+        <div class="main_display_middle">
+          <!-- INTRO ELEMENTS -->
+          <!-- GAMESTART BLOCK -->
+          <div class="gamestart_block">
+            <p class="gamestart_text step 1">1. Choose a game type</p>
+            <div class="gamestart_buttons">
+              <p class="gamestart_button_fun step1 no_pointer_events">Fun</p>
+            </div>
+            <p class="gamestart_text step2">2. Choose your identity:</p>
+            <div class="gamestart_identity_div step2">
+              <form class="gamestart_player_name no_pointer_events">
+                <input
+                  type="text"
+                  id="gamestart_name_input"
+                  placeholder=""
+                  aria-label="Chatbox Message Input"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </form>
+            </div>
+            <p class="gamestart_text step3">3. Challenge an opponent</p>
+            <div class="gamestart_opponent_div step3">
+              <p class="gamestart_opponent_name no_pointer_events"></p>
+              <p
+                class="gamestart_button_challenge no_pointer_events"
+                title="Challenge"
+              >
+                <svg
+                  width="30px"
+                  height="30px"
+                  viewBox="0 0 512 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#FFFFFF"
+                    d="M19.75 14.438c59.538 112.29 142.51 202.35 232.28 292.718l3.626 3.75.063-.062c21.827 21.93 44.04 43.923 66.405 66.25-18.856 14.813-38.974 28.2-59.938 40.312l28.532 28.53 68.717-68.717c42.337 27.636 76.286 63.646 104.094 105.81l28.064-28.06c-42.47-27.493-79.74-60.206-106.03-103.876l68.936-68.938-28.53-28.53c-11.115 21.853-24.413 42.015-39.47 60.593-43.852-43.8-86.462-85.842-130.125-125.47-.224-.203-.432-.422-.656-.625C183.624 122.75 108.515 63.91 19.75 14.437zm471.875 0c-83.038 46.28-154.122 100.78-221.97 161.156l22.814 21.562 56.81-56.812 13.22 13.187-56.438 56.44 24.594 23.186c61.802-66.92 117.6-136.92 160.97-218.72zm-329.53 125.906l200.56 200.53c-4.36 4.443-8.84 8.793-13.405 13.032L148.875 153.53l13.22-13.186zm-76.69 113.28l-28.5 28.532 68.907 68.906c-26.29 43.673-63.53 76.414-106 103.907l28.063 28.06c27.807-42.164 61.758-78.174 104.094-105.81l68.718 68.717 28.53-28.53c-20.962-12.113-41.08-25.5-59.937-40.313 17.865-17.83 35.61-35.433 53.157-52.97l-24.843-25.655-55.47 55.467c-4.565-4.238-9.014-8.62-13.374-13.062l55.844-55.844-24.53-25.374c-18.28 17.856-36.602 36.06-55.158 54.594-15.068-18.587-28.38-38.758-39.5-60.625z"
+                  />
+                </svg>
+              </p>
+            </div>
+            <p class="gamestart_reset_button x_button" title="Restart">
               <svg
-                width="30px"
-                height="30px"
-                viewBox="0 0 512 512"
+                fill="#FFFFFF"
+                width="20px"
+                height="20px"
+                viewBox="0 0 1920 1920"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill="#FFFFFF"
-                  d="M19.75 14.438c59.538 112.29 142.51 202.35 232.28 292.718l3.626 3.75.063-.062c21.827 21.93 44.04 43.923 66.405 66.25-18.856 14.813-38.974 28.2-59.938 40.312l28.532 28.53 68.717-68.717c42.337 27.636 76.286 63.646 104.094 105.81l28.064-28.06c-42.47-27.493-79.74-60.206-106.03-103.876l68.936-68.938-28.53-28.53c-11.115 21.853-24.413 42.015-39.47 60.593-43.852-43.8-86.462-85.842-130.125-125.47-.224-.203-.432-.422-.656-.625C183.624 122.75 108.515 63.91 19.75 14.437zm471.875 0c-83.038 46.28-154.122 100.78-221.97 161.156l22.814 21.562 56.81-56.812 13.22 13.187-56.438 56.44 24.594 23.186c61.802-66.92 117.6-136.92 160.97-218.72zm-329.53 125.906l200.56 200.53c-4.36 4.443-8.84 8.793-13.405 13.032L148.875 153.53l13.22-13.186zm-76.69 113.28l-28.5 28.532 68.907 68.906c-26.29 43.673-63.53 76.414-106 103.907l28.063 28.06c27.807-42.164 61.758-78.174 104.094-105.81l68.718 68.717 28.53-28.53c-20.962-12.113-41.08-25.5-59.937-40.313 17.865-17.83 35.61-35.433 53.157-52.97l-24.843-25.655-55.47 55.467c-4.565-4.238-9.014-8.62-13.374-13.062l55.844-55.844-24.53-25.374c-18.28 17.856-36.602 36.06-55.158 54.594-15.068-18.587-28.38-38.758-39.5-60.625z"
+                  d="M960 0v213.333c411.627 0 746.667 334.934 746.667 746.667S1371.627 1706.667 960 1706.667 213.333 1371.733 213.333 960c0-197.013 78.4-382.507 213.334-520.747v254.08H640V106.667H53.333V320h191.04C88.64 494.08 0 720.96 0 960c0 529.28 430.613 960 960 960s960-430.72 960-960S1489.387 0 960 0"
+                  fill-rule="evenodd"
                 />
               </svg>
             </p>
           </div>
-          <p class="gamestart_reset_button x_button" title="Restart">
+          <!-- HELPER BOX -->
+          <div class="helper_div">
+            <p>Click here</p>
             <svg
               fill="#FFFFFF"
-              width="20px"
-              height="20px"
-              viewBox="0 0 1920 1920"
+              width="60px"
+              height="60px"
+              viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M960 0v213.333c411.627 0 746.667 334.934 746.667 746.667S1371.627 1706.667 960 1706.667 213.333 1371.733 213.333 960c0-197.013 78.4-382.507 213.334-520.747v254.08H640V106.667H53.333V320h191.04C88.64 494.08 0 720.96 0 960c0 529.28 430.613 960 960 960s960-430.72 960-960S1489.387 0 960 0"
-                fill-rule="evenodd"
+                d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"
               />
             </svg>
-          </p>
-        </div>
-        <div class="grey_overlay"></div>
-        <img
-          class="game_board"
-          src="img/backgammon_dark.jpg"
-          alt="Backgammon Game Board"
-        />
-        <!-- HELPER BOX -->
-        <div class="helper_div">
-          <p>Click here</p>
-          <svg
-            fill="#FFFFFF"
-            width="60px"
-            height="60px"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          </div>
+          <!-- GAME BOARD -->
+          <div
+            id="content_container"
+            class="no_pointer_events"
+            title="Backgammon Game"
           >
-            <path
-              d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"
-            />
-          </svg>
+            <div id="board">
+              <div id="highlight13" class="highlight highlight_top"></div>
+              <div id="highlight14" class="highlight highlight_top"></div>
+              <div id="highlight15" class="highlight highlight_top"></div>
+              <div id="highlight16" class="highlight highlight_top"></div>
+              <div id="highlight17" class="highlight highlight_top"></div>
+              <div id="highlight18" class="highlight highlight_top"></div>
+              <div id="highlight19" class="highlight highlight_top"></div>
+              <div id="highlight20" class="highlight highlight_top"></div>
+              <div id="highlight21" class="highlight highlight_top"></div>
+              <div id="highlight22" class="highlight highlight_top"></div>
+              <div id="highlight23" class="highlight highlight_top"></div>
+              <div id="highlight24" class="highlight highlight_top"></div>
+              <div id="highlight12" class="highlight highlight_bottom"></div>
+              <div id="highlight11" class="highlight highlight_bottom"></div>
+              <div id="highlight10" class="highlight highlight_bottom"></div>
+              <div id="highlight9" class="highlight highlight_bottom"></div>
+              <div id="highlight8" class="highlight highlight_bottom"></div>
+              <div id="highlight7" class="highlight highlight_bottom"></div>
+              <div id="highlight6" class="highlight highlight_bottom"></div>
+              <div id="highlight5" class="highlight highlight_bottom"></div>
+              <div id="highlight4" class="highlight highlight_bottom"></div>
+              <div id="highlight3" class="highlight highlight_bottom"></div>
+              <div id="highlight2" class="highlight highlight_bottom"></div>
+              <div id="highlight1" class="highlight highlight_bottom"></div>
+
+              <!-- Backgammon pieces -->
+              <div class="piece piece_white" id="w15" data-type="w"></div>
+              <div class="piece piece_white" id="w14" data-type="w"></div>
+              <div class="piece piece_red" id="r15" data-type="r"></div>
+              <div class="piece piece_red" id="r14" data-type="r"></div>
+              <div class="piece piece_red" id="r13" data-type="r"></div>
+              <div class="piece piece_red" id="r12" data-type="r"></div>
+              <div class="piece piece_red" id="r11" data-type="r"></div>
+              <div class="piece piece_red" id="r10" data-type="r"></div>
+              <div class="piece piece_red" id="r9" data-type="r"></div>
+              <div class="piece piece_red" id="r8" data-type="r"></div>
+              <div class="piece piece_white" id="w13" data-type="w"></div>
+              <div class="piece piece_white" id="w12" data-type="w"></div>
+              <div class="piece piece_white" id="w11" data-type="w"></div>
+              <div class="piece piece_white" id="w10" data-type="w"></div>
+              <div class="piece piece_white" id="w9" data-type="w"></div>
+              <div class="piece piece_red" id="r7" data-type="r"></div>
+              <div class="piece piece_red" id="r6" data-type="r"></div>
+              <div class="piece piece_red" id="r5" data-type="r"></div>
+              <div class="piece piece_red" id="r4" data-type="r"></div>
+              <div class="piece piece_red" id="r3" data-type="r"></div>
+              <div class="piece piece_white" id="w8" data-type="w"></div>
+              <div class="piece piece_white" id="w7" data-type="w"></div>
+              <div class="piece piece_white" id="w6" data-type="w"></div>
+              <div class="piece piece_white" id="w5" data-type="w"></div>
+              <div class="piece piece_white" id="w4" data-type="w"></div>
+              <div class="piece piece_white" id="w3" data-type="w"></div>
+              <div class="piece piece_white" id="w2" data-type="w"></div>
+              <div class="piece piece_white" id="w1" data-type="w"></div>
+              <div class="piece piece_red" id="r2" data-type="r"></div>
+              <div class="piece piece_red" id="r1" data-type="r"></div>
+
+              <!-- Point occupied numbers -->
+              <div class="piece-number-overlay" id="pieceNumber1"></div>
+              <div class="piece-number-overlay" id="pieceNumber2"></div>
+              <div class="piece-number-overlay" id="pieceNumber3"></div>
+              <div class="piece-number-overlay" id="pieceNumber4"></div>
+              <div class="piece-number-overlay" id="pieceNumber5"></div>
+              <div class="piece-number-overlay" id="pieceNumber6"></div>
+              <div class="piece-number-overlay" id="pieceNumber7"></div>
+              <div class="piece-number-overlay" id="pieceNumber8"></div>
+              <div class="piece-number-overlay" id="pieceNumber9"></div>
+              <div class="piece-number-overlay" id="pieceNumber10"></div>
+              <div class="piece-number-overlay" id="pieceNumber11"></div>
+              <div class="piece-number-overlay" id="pieceNumber12"></div>
+              <div class="piece-number-overlay" id="pieceNumber13"></div>
+              <div class="piece-number-overlay" id="pieceNumber14"></div>
+              <div class="piece-number-overlay" id="pieceNumber15"></div>
+              <div class="piece-number-overlay" id="pieceNumber16"></div>
+              <div class="piece-number-overlay" id="pieceNumber17"></div>
+              <div class="piece-number-overlay" id="pieceNumber18"></div>
+              <div class="piece-number-overlay" id="pieceNumber19"></div>
+              <div class="piece-number-overlay" id="pieceNumber20"></div>
+              <div class="piece-number-overlay" id="pieceNumber21"></div>
+              <div class="piece-number-overlay" id="pieceNumber22"></div>
+              <div class="piece-number-overlay" id="pieceNumber23"></div>
+              <div class="piece-number-overlay" id="pieceNumber24"></div>
+              <div class="piece-number-overlay" id="pieceNumber25"></div>
+              <div class="piece-number-overlay" id="pieceNumber26"></div>
+            </div>
+          </div>
+          <div class="main_display_right"></div>
         </div>
       </div>
       <!-- PLAYER ARROW SECTION -->
@@ -311,193 +494,6 @@
           </div>
           <p class="forfeit_x_button x_button">X</p>
         </div>
-      </section>
-      <!-- PLAYERS SECTION -->
-      <section class="players_section">
-        <div class="player_filters">
-          <strong>FILTERS</strong>
-          <div class="filter_div">
-            <div class="toggle_online">
-              <p>HIDE OFFLINE</p>
-              <div class="toggle_online_graphic">
-                <p class="slider_button"></p>
-              </div>
-            </div>
-            <div class="toggle_free">
-              <p>HIDE INGAME</p>
-              <div class="toggle_free_graphic">
-                <p class="slider_button"></p>
-              </div>
-            </div>
-            <div class="toggle_language">
-              <p>LANGUAGE</p>
-              <div class="toggle_language_box">
-                <p>ENGLISH</p>
-                <svg
-                  class="language_selector_button"
-                  width="18px"
-                  height="18px"
-                  viewBox="0 0 48 48"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <title>Select Language</title>
-                  <g id="Layer_2" data-name="Layer 2">
-                    <g id="invisible_box" data-name="invisible box">
-                      <rect width="48" height="48" fill="none" />
-                    </g>
-                    <g id="icons_Q2" data-name="icons Q2">
-                      <path
-                        d="M24,46A22,22,0,1,0,2,24,21.9,21.9,0,0,0,24,46ZM14.3,19.8A2.5,2.5,0,0,1,16,19H32a2.5,2.5,0,0,1,1.7.8,2.1,2.1,0,0,1-.4,2.7l-7.9,7.9a1.9,1.9,0,0,1-2.8,0l-7.9-7.9A2.1,2.1,0,0,1,14.3,19.8Z"
-                      />
-                    </g>
-                  </g>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="active_friends">
-          <strong>FRIENDS</strong>
-          <div class="players_display players_friends"></div>
-        </div>
-        <div class="active_played_before">
-          <strong>PLAYED BEFORE</strong>
-          <div class="players_display players_played_before"></div>
-        </div>
-        <div class="active_players">
-          <strong>CURRENTLY ACTIVE</strong>
-          <div class="players_display players_currently_active"></div>
-        </div>
-        <div class="players_x_button x_button no_pointer_events">X</div>
-      </section>
-      <!-- CHAT SECTION -->
-      <section class="chat_section">
-        <div class="chat_display"></div>
-        <form class="chat_form">
-          <input
-            type="text"
-            id="chat_input"
-            placeholder="Enter your message..."
-            aria-label="Chatbox Message Input"
-            autocomplete="off"
-          />
-        </form>
-      </section>
-      <!-- SETTINGS SECTION -->
-      <section class="settings_section no_pointer_events">
-        <div class="settings_info_div">
-          <p class="settings_title">SETTINGS</p>
-          <div class="settings_x_button x_button">X</div>
-        </div>
-      </section>
-      <!-- RULES SECTION -->
-      <section class="rules_section no_pointer_events">
-        <div class="rules_info">
-          <p><strong>RULES OF BACKGAMMON</strong></p>
-          <p><strong>ORIGIN</strong></p>
-          <p>
-            Backgammon evolved from ancient games such as Rome’s
-            <a
-              href="https://www.britannica.com/sports/backgammon"
-              target="_blank"
-              title="History of backgammon"
-              rel="noopener noreferrer"
-              >Ludus Duodecim Scriptorum</a
-            >, making it over 5,000 years old. Thanks to such popularity, it’s
-            become the national game for eight countries, including Egypt,
-            Turkey, and Greece. What makes backgammon so compelling (and worthy
-            of worldwide tournaments) is its balance of chance by incorporating
-            dice rolls, and strategy. It’s also very easy to learn and can scale
-            in difficulty depending on who you’re playing; so, finding the right
-            backgammon opponent can be its own fun challenge.
-          </p>
-          <p><strong>HOW TO PLAY</strong></p>
-          <p>
-            Backgammon is a two-player game where each player controls 15
-            pieces, aka “men” or checkers, one black and one white. The first
-            player to remove their pieces from the board wins.
-          </p>
-          <p>
-            A board consists of 24 arrow-shaped spaces, the colors split into
-            alternating rows. Six spaces, or “points,” take up each quadrant.
-            The home board for the white checkers is on a player’s right, while
-            the home board for the black checkers is on a player’s left. The
-            white checkers only move counterclockwise, and the black checkers
-            move clockwise.
-          </p>
-          <p>
-            Each player tries to move their 15 pieces around the board until
-            they can remove them from play by getting them to the edge of the
-            home board. Removing a piece is known as “bearing off.” The starting
-            position for all the pieces are as follows:
-          </p>
-          <div class="rules_image_box">
-            <img
-              class="rules_backgammon"
-              src="img/rules_backgammon.webp"
-              alt="Backgammon Example Board"
-            />
-          </div>
-          <p>
-            Players move their checkers to their home quadrant to remove them
-            from play. The player’s home quadrant contains the six rows in the
-            quadrant originally occupied by their opponent’s two checkers
-            (opposite left for player one and opposite right for player two).
-          </p>
-          <p><strong>MOVES AND RULES</strong></p>
-          <p>
-            Players each roll one die to see who goes first. The first player
-            moves spaces equal to the total of that first roll (their die and
-            their opponent’s). After that, players roll both their own dice.
-            Gamers move up to two pieces equal to the total of the dice roll. If
-            moving two pieces, each piece moves the same as a number on a die.
-            For example, if you roll a 2 and a 6, one piece must move 2 and the
-            other 6 (or 6 and then 2).
-          </p>
-          <ul>
-            <li>If you roll doubles, you can move that number four times.</li>
-            <li>
-              You <strong>can</strong> move to a space with only one of the
-              opponent’s checkers. Your opponent’s piece is then bumped to the
-              middle of the board, aka “jail” (which divides the four
-              quadrants). In order to remove the piece from jail, they have to
-              try to get the piece into their home quadrant on their next turn.
-            </li>
-            <li>
-              To escape jail, the roll must include a die with the number of
-              moves to a free space, following rules about blocked spaces, to
-              return a checker to play. Otherwise, that player passes their
-              turn.
-            </li>
-            <li>
-              You <strong>cannot</strong> move a piece to a point where your
-              opponent has at least two checkers.
-            </li>
-            <li>
-              You <strong>cannot</strong> move the same piece twice if it would
-              land on a blocked space at the end of a single die’s count. For
-              example, if you roll a 3 and a 4 and both the third and fourth
-              space are blocked, you cannot move your checker to the seventh
-              space, even if it’s free.
-            </li>
-          </ul>
-          <p><strong>WINNING THE GAME</strong></p>
-          <p>
-            Once all 15 pieces are in your home quadrant, you can begin to roll
-            dice to move them off the board and onto the side of the home board.
-            You must roll at least the number of spaces plus one to bear off.
-            Remove all your pieces to win!
-          </p>
-        </div>
-        <div class="rules_x_button x_button">X</div>
-      </section>
-      <!-- OTHER GAMES SECTION -->
-      <section class="other_games_section no_pointer_events">
-        <div class="other_games_info">
-          <p>TRY SOME OF OUR OTHER GREAT GAMES</p>
-          <div class="other_games_display"></div>
-        </div>
-        <div class="other_games_x_button x_button">X</div>
       </section>
       <!-- FLOATING BUTTONS -->
       <div class="floating_buttons_main">

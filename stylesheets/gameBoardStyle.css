@@ -3,12 +3,12 @@
   position: relative;
   height: 504px;
   width: 680px;
-  padding: 10px;
-  padding-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   border: solid 2px white;
   border-radius: 25px;
   background-image: url("../img/big_backgammon_enhanced_35pct.png");
-  z-index: 9999;
+  z-index: 1;
 }
 
 /* HIGHLIGHT ELEMENTS */
@@ -132,7 +132,6 @@
 /* PIECE ELEMENTS */
 .piece {
   position: absolute;
-  top: 6px;
   left: 6px;
   height: 36px;
   width: 36px;
@@ -297,4 +296,124 @@
 #pieceNumber26 {
   top: 251px;
   left: 320px;
+}
+
+#r1 {
+  top: 6px;
+}
+
+#r2 {
+  top: 18px;
+}
+
+#r3 {
+  top: 30px;
+}
+
+#r4 {
+  top: 42px;
+}
+
+#r5 {
+  top: 54px;
+}
+
+#r6 {
+  top: 66px;
+}
+
+#r7 {
+  top: 78px;
+}
+
+#r8 {
+  top: 90px;
+}
+
+#r9 {
+  top: 102px;
+}
+
+#r10 {
+  top: 114px;
+}
+
+#r11 {
+  top: 126px;
+}
+
+#r12 {
+  top: 138px;
+}
+
+#r13 {
+  top: 150px;
+}
+
+#r14 {
+  top: 162px;
+}
+
+#r15 {
+  top: 174px;
+}
+
+#w1 {
+  top: 256px;
+}
+
+#w2 {
+  top: 268px;
+}
+
+#w3 {
+  top: 280px;
+}
+
+#w4 {
+  top: 292px;
+}
+
+#w5 {
+  top: 304px;
+}
+
+#w6 {
+  top: 316px;
+}
+
+#w7 {
+  top: 328px;
+}
+
+#w8 {
+  top: 340px;
+}
+
+#w9 {
+  top: 352px;
+}
+
+#w10 {
+  top: 364px;
+}
+
+#w11 {
+  top: 376px;
+}
+
+#w12 {
+  top: 388px;
+}
+
+#w13 {
+  top: 400px;
+}
+
+#w14 {
+  top: 412px;
+}
+
+#w15 {
+  top: 424px;
 }

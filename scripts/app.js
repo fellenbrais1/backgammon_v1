@@ -161,7 +161,7 @@ const board = {
   },
 
   resetPiecesPosition(piece) {
-    piece.style.top = "6px";
+    piece.style.top = "";
     piece.style.left = "6px";
   },
 
@@ -549,6 +549,7 @@ function animateMovePiece(piece, targetX, targetY, speed) {
   return new Promise((resolve) => {
     const initialX = parseFloat(piece.style.left) || 0;
     const initialY = parseFloat(piece.style.top) || 0;
+    console.log(initialX, initialY);
     const deltaX = parseFloat(targetX) - PIECE_RADIUS - initialX;
     const deltaY = parseFloat(targetY) - PIECE_RADIUS - initialY;
 
@@ -860,12 +861,3 @@ function isPieceMovable(piece, pt, pos) {
 
   return true;
 }
-
-// window.addEventListener("click", () => {
-//   pieces.forEach((current) => {
-//     board.resetPiecesPosition(current);
-//   });
-//   startGame();
-// });
-
-// startGame();

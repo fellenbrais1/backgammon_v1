@@ -30,6 +30,32 @@ html {
   overflow: hidden;
 }
 
+/* X BUTTON ELEMENTS */
+.x_button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: 24px;
+  width: 24px;
+  padding-bottom: 2px;
+  border: 1px solid white;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.x_button:hover {
+  box-shadow: 0px 0px 20px white;
+}
+
+.x_button:active {
+  background-color: var(--active_button_gold);
+}
+
 /* MAIN PAGE CONTAINER */
 .pagebox {
   position: relative;
@@ -44,29 +70,43 @@ html {
 }
 
 /* CENTRAL DISPLAY ELEMENTS */
-.main_display {
+/* .main_display {
   position: relative;
-  width: 960px;
-  height: 630px;
+  height: 504px;
+  max-width: 1200px;
+  display: grid;
+  margin-top: calc(100vh - 504px / 2);
+  margin-left: calc(100vw - 1200px / 2);
+  grid-template-columns: 250px 680px 250px;
   margin: auto;
+  z-index: 6;
+} */
+
+.main_display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 504px;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 250px 680px 250px;
   z-index: 6;
 }
 
-.intro_display {
+.main_display_left,
+.main_display_middle,
+.main_display_left {
   position: relative;
-  height: 100%;
-  width: 100%;
-  padding-left: 60px;
-  z-index: 7;
 }
 
 #content_container {
   position: absolute;
-  top: 60px;
-  left: 140px;
+  top: 0px;
+  left: 0px;
   height: 100%;
   width: 100%;
-  z-index: 9999;
+  z-index: 1;
   transition: opacity 2s ease-in-out;
   /* pointer-events: none; */
   opacity: 0;
@@ -113,26 +153,26 @@ html {
 
 /* GAMESTART BLOCK */
 .gamestart_block {
+  position: relative;
   display: grid;
-  grid-template-rows: 50px 72px 50px 72px 76px auto;
-  position: absolute;
-  top: 310px;
-  left: 50%;
+  grid-template-rows: 50px 52px 50px 52px 50px 56px auto;
   width: 400px;
-  height: 420px;
-  padding-top: 10px;
+  height: 320px;
+  margin-left: 140px;
+  margin-top: 92px;
   border: solid 4px white;
   border-radius: 5%;
   background-color: var(--felt_green);
   opacity: 0;
   z-index: 8;
-  transform: translate(-50%, -50%);
+  /* transform: translate(-50%, -50%); */
 }
 
 .gamestart_text {
   padding-top: 10px;
   color: white;
-  text-align: center;
+  text-align: left;
+  margin-left: 40px;
   font-weight: bold;
   font-size: 20px;
   cursor: default;
@@ -141,7 +181,13 @@ html {
 .gamestart_buttons {
   display: grid;
   grid-template-columns: auto;
-  margin-left: 120px;
+  margin-left: 40px;
+}
+
+.gamestart_reset_button {
+  position: absolute;
+  top: 48px;
+  right: 146px;
 }
 
 .gamestart_reset_button svg {
@@ -185,7 +231,7 @@ html {
 .gamestart_identity_div {
   display: grid;
   grid-template-columns: auto;
-  margin-left: 0;
+  margin-left: -32px;
 }
 
 .gamestart_player_name,
@@ -241,17 +287,17 @@ html {
   transition: opacity ease-in-out 1s;
 }
 
-.gamestart_text.step3 {
+/* .gamestart_text.step3 {
   margin-top: 24px;
-}
+} */
 
 /* HELPER ELEMENTS */
 .helper_div {
   display: grid;
   grid-template-columns: auto 60px;
   position: absolute;
-  top: 23.5%;
-  left: 22%;
+  top: 132px;
+  left: -10px;
   border: 2px solid white;
   border-radius: 25px;
   background-color: var(--active_button_gold);
@@ -267,6 +313,10 @@ html {
   padding-top: 10px;
   padding-left: 10px;
   cursor: default;
+}
+
+.helper_svg {
+  margin-left: -35px;
 }
 
 /* GAME BOARD ELEMENTS */
@@ -604,14 +654,15 @@ html {
 /* PLAYERS SECTION */
 .players_section {
   display: grid;
-  grid-template-rows: 70px 150px 190px 190px;
+  grid-template-rows: 70px 144px 144px 144px;
   position: absolute;
-  top: 15%;
-  left: 1%;
-  height: 630px;
-  width: 450px;
-  padding-left: 10px;
-  padding-top: 10px;
+  /* top: 15%; */
+  /* left: 1%; */
+  height: 504px;
+  width: 250px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
   border: solid 2px white;
   border-radius: 25px;
   background-color: var(--light_felt_green);
@@ -623,10 +674,10 @@ html {
 
 .players_display {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-auto-rows: 24px;
   height: 80%;
-  width: 98%;
+  width: 240px;
   margin-top: 10px;
   margin-bottom: 10px;
   border: 2px solid white;
@@ -1024,32 +1075,6 @@ html {
   margin: 15px;
 }
 
-/* X BUTTON ELEMENTS */
-.x_button {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  height: 36px;
-  width: 36px;
-  padding-top: 2px;
-  border: 1px solid white;
-  border-radius: 50%;
-  background-color: red;
-  color: white;
-  text-align: center;
-  font-weight: bold;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.x_button:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.x_button:active {
-  background-color: var(--active_button_gold);
-}
-
 /* DICE SECTION */
 .dice_section {
   display: grid;
@@ -1340,20 +1365,21 @@ html {
   background-color: rgb(91, 218, 91);
 }
 
-.pointer_step2 {
-  top: 43.5%;
-  left: -0.5%;
+.helper_step2 {
+  top: 234px;
+  left: -180px;
   height: 90px;
   font-size: 24px;
 }
 
-.pointer_step3 {
-  grid-template-columns: 50px auto 60px;
-  top: 67%;
-  left: -6%;
-  height: 120px;
+.helper_step3 {
+  grid-template-columns: 50px 400px 50px;
+  top: 400px;
+  left: 5px;
+  height: 80px;
+  width: 500px;
   z-index: 9;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .grey_button {
