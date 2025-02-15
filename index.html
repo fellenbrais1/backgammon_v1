@@ -301,6 +301,40 @@
               />
             </svg>
           </div>
+          <!-- CHALLENGE SECTION -->
+          <section class="challenge_section no_pointer_events">
+            <div class="challenge_block">
+              <p class="challenge_text_big">CHALLENGE SENT</p>
+              <p class="challenge_text_names"></p>
+              <p class="challenge_text">Waiting for a response...</p>
+              <p class="challenge_button_cancel" title="Cancel Challenge">
+                Cancel
+              </p>
+            </div>
+          </section>
+          <!-- CHALLENGE RECEIVED SECTION -->
+          <section class="challenge_received_section no_pointer_events">
+            <div class="challenge_received_block">
+              <p class="challenge_received_text_big">CHALLENGE RECEIVED</p>
+              <p class="challenge_received_text">
+                {Other player} wants to play a game!
+              </p>
+              <div class="challenge_received_button_div">
+                <p
+                  class="challenge_received_button_accept"
+                  title="Cancel Challenge"
+                >
+                  Accept
+                </p>
+                <p
+                  class="challenge_received_button_decline"
+                  title="Cancel Challenge"
+                >
+                  Decline
+                </p>
+              </div>
+            </div>
+          </section>
           <!-- GAME BOARD -->
           <div
             id="content_container"
@@ -394,7 +428,78 @@
               <div class="piece-number-overlay" id="pieceNumber26"></div>
             </div>
           </div>
-          <div class="main_display_right"></div>
+          <!-- NAME PLAYER 1 SECTION
+          <section class="name_section player1">
+            <img
+              class="player_portrait1"
+              src="img/portrait_male.png"
+              alt="Player Portrait"
+            />
+            <p class="name_player1">Guest</p>
+            <div class="player_level">
+              <div class="player1_piece piece_white"></div>
+              <p class="player_rating1">0</p>
+            </div>
+          </section>
+          NAME PLAYER 2 SECTION
+          <section class="name_section player2">
+            <img
+              class="player_portrait2"
+              src="img/portrait_male.png"
+              alt="Player Portrait"
+            />
+            <p class="name_player2">Guest</p>
+            <div class="player_level">
+              <div class="player2_piece piece_red"></div>
+              <p class="player_rating2">0</p>
+            </div>
+          </section> -->
+        </div>
+        <div class="main_display_right">
+          <!-- AD SECTION -->
+          <p class="ad_notification">Advertisement</p>
+          <section class="ad_section">
+            <div class="adbox">
+              <a
+                class="ad_link"
+                href="https://www.cash4goldonline.co.uk/"
+                target="_blank"
+              >
+                <img
+                  class="ad_picture"
+                  src="img/cash4gold.jpg"
+                  alt="Cash 4 Gold Advertisement"
+                  title="Cash 4 Gold Online"
+              /></a>
+            </div>
+          </section>
+          <!-- DICE SECTION -->
+          <section class="dice_section">
+            <p class="dice_result_display1" title="Roll">6</p>
+            <p class="dice_result_display2" title="Roll">6</p>
+            <p class="dice_result_display3" title="Roll">6</p>
+            <p class="dice_result_display4" title="Roll">6</p>
+            <div class="dice_button_block">
+              <div class="dice_img_block">
+                <img
+                  class="dice_img1"
+                  src="img/dice-six.png"
+                  alt="Dice Face 6"
+                />
+              </div>
+              <div class="dice_img_block">
+                <img
+                  class="dice_img2"
+                  src="img/dice-six.png"
+                  alt="Dice Face 6"
+                />
+              </div>
+            </div>
+            <div class="dice_buttons_div">
+              <p class="dice_roll_button">Roll</p>
+              <p class="dice_skip_button">End Turn</p>
+            </div>
+          </section>
         </div>
       </div>
       <!-- PLAYER ARROW SECTION -->
@@ -421,64 +526,6 @@
           />
         </g>
       </svg>
-      <!-- NAME PLAYER 1 SECTION -->
-      <section class="name_section player1">
-        <img
-          class="player_portrait1"
-          src="img/portrait_male.png"
-          alt="Player Portrait"
-        />
-        <p class="name_player1">Guest</p>
-        <div class="player_level">
-          <div class="player1_piece piece_white"></div>
-          <p class="player_rating1">0</p>
-        </div>
-      </section>
-      <!-- NAME PLAYER 2 SECTION -->
-      <section class="name_section player2">
-        <img
-          class="player_portrait2"
-          src="img/portrait_male.png"
-          alt="Player Portrait"
-        />
-        <p class="name_player2">Guest</p>
-        <div class="player_level">
-          <div class="player2_piece piece_red"></div>
-          <p class="player_rating2">0</p>
-        </div>
-      </section>
-      <!-- CHALLENGE SECTION -->
-      <section class="challenge_section no_pointer_events">
-        <div class="challenge_block">
-          <p class="challenge_text_big">CHALLENGE SENT</p>
-          <p class="challenge_text_names"></p>
-          <p class="challenge_text">Waiting for a response...</p>
-          <p class="challenge_button_cancel" title="Cancel Challenge">Cancel</p>
-        </div>
-      </section>
-      <!-- CHALLENGE RECEIVED SECTION -->
-      <section class="challenge_received_section no_pointer_events">
-        <div class="challenge_received_block">
-          <p class="challenge_received_text_big">CHALLENGE RECEIVED</p>
-          <p class="challenge_received_text">
-            {Other player} wants to play a game!
-          </p>
-          <div class="challenge_received_button_div">
-            <p
-              class="challenge_received_button_accept"
-              title="Cancel Challenge"
-            >
-              Accept
-            </p>
-            <p
-              class="challenge_received_button_decline"
-              title="Cancel Challenge"
-            >
-              Decline
-            </p>
-          </div>
-        </div>
-      </section>
       <!-- FORFEIT SECTION -->
       <section class="forfeit_section no_pointer_events">
         <div class="forfeit_block">
@@ -683,35 +730,6 @@
           </svg>
         </p>
       </div>
-      <!-- DICE SECTION -->
-      <section class="dice_section">
-        <p class="dice_result_display" title="Roll">6</p>
-        <div class="dice_button_block">
-          <div class="dice_img_block">
-            <img class="dice_img1" src="img/dice-six.png" alt="Dice Face 6" />
-          </div>
-          <div class="dice_img_block">
-            <img class="dice_img2" src="img/dice-six.png" alt="Dice Face 6" />
-          </div>
-        </div>
-      </section>
-      <!-- AD SECTION -->
-      <p class="ad_notification">Advertisement</p>
-      <section class="ad_section">
-        <div class="adbox">
-          <a
-            class="ad_link"
-            href="https://www.cash4goldonline.co.uk/"
-            target="_blank"
-          >
-            <img
-              class="ad_picture"
-              src="img/cash4gold.jpg"
-              alt="Cash 4 Gold Advertisement"
-              title="Cash 4 Gold Online"
-          /></a>
-        </div>
-      </section>
       <!-- COOKIE SECTION -->
       <aside class="cookie_permission">
         <div>

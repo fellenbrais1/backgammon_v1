@@ -63,19 +63,19 @@ const challengeReceivedButtonDecline = document.querySelector(
 );
 
 // Player arrow indicator elements
-const playerArrow = document.querySelector(".player_arrow");
+// const playerArrow = document.querySelector(".player_arrow");
 
-// Player 1 section elements
-const player1NameSection = document.querySelector(".name_section.player1");
-const player1Portait = document.querySelector(".player_portrait1");
-const player1Name = document.querySelector(".name_player1");
-const player1Rating = document.querySelector(".player_rating1");
+// // Player 1 section elements
+// const player1NameSection = document.querySelector(".name_section.player1");
+// const player1Portait = document.querySelector(".player_portrait1");
+// const player1Name = document.querySelector(".name_player1");
+// const player1Rating = document.querySelector(".player_rating1");
 
-// Player 2 section elements
-const player2NameSection = document.querySelector(".name_section.player2");
-const player2Portait = document.querySelector(".player_portrait2");
-const player2Name = document.querySelector(".name_player2");
-const player2Rating = document.querySelector(".player_rating2");
+// // Player 2 section elements
+// const player2NameSection = document.querySelector(".name_section.player2");
+// const player2Portait = document.querySelector(".player_portrait2");
+// const player2Name = document.querySelector(".name_player2");
+// const player2Rating = document.querySelector(".player_rating2");
 
 // Chat section elements
 const chatSection = document.querySelector(".chat_section");
@@ -133,7 +133,10 @@ const clsButton = document.querySelector(".button_cls");
 const diceSection = document.querySelector(".dice_section");
 const diceFace1 = document.querySelector(".dice_img1");
 const diceFace2 = document.querySelector(".dice_img2");
-const diceRollResult = document.querySelector(".dice_result_display");
+const diceRollResult1 = document.querySelector(".dice_result_display1");
+const diceRollResult2 = document.querySelector(".dice_result_display2");
+const diceRollResult3 = document.querySelector(".dice_result_display3");
+const diceRollResult4 = document.querySelector(".dice_result_display4");
 
 // Cookie bar section elements
 const cookieBar = document.querySelector(".cookie_permission");
@@ -204,9 +207,7 @@ const hideElementsList = [
   otherGamesSection,
   rulesSection,
   playersSection,
-  player1NameSection,
-  player2NameSection,
-  adNotification,
+  +adNotification,
   forfeitSection,
   helperBox,
   buttonGamestartFun,
@@ -470,12 +471,12 @@ const togglerUpArrow = `<svg width="40px" height="40px" viewBox="0 0 1024 1024" 
 const togglerDownArrow = `<svg width="40px" height="40px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M903.232 256l56.768 50.432L512 768 64 306.432 120.768 256 512 659.072z" fill="#FFFFFF" /></svg>`;
 
 // COOKIES SECTION VARIABLES
-let userIP;
-let userUsername;
-let userPassword;
-let userDisplayName;
+// let userIP;
+// let userUsername;
+// let userPassword;
+// let userDisplayName;
 
-let cookiesAcceptedFlag = false;
+// let cookiesAcceptedFlag = false;
 
 // User IP address to be stored on this variable during calculation
 let userIPAddress;
@@ -601,7 +602,7 @@ playerNameForm.addEventListener("keydown", (event) => {
         const userDisplayName = playerNameForm.value;
         playerObjectHere.displayName = userDisplayName;
         console.log(`Player object: ${JSON.stringify(playerObjectHere)}`);
-        addPlayerDetails(1, playerObjectHere);
+        // addPlayerDetails(1, playerObjectHere);
         step2Process();
         return;
       } else {
@@ -857,7 +858,7 @@ floatingButtonsToggle.addEventListener("click", () => {
 });
 
 // DICE SECTION LISTENERS
-diceRollResult.addEventListener("click", () => {
+diceRollResult1.addEventListener("click", () => {
   if (firstTurn) {
     const roll = rollOnce();
     console.log(roll);
@@ -981,10 +982,10 @@ function rollOneDie(result) {
   rollingAnimation(target1);
   setTimeout(() => {
     cycleDieFaces(roll1, "set", target1);
-    diceRollResult.textContent = Number(roll1);
+    diceRollResult1.textContent = Number(roll1);
   }, 1010);
   setTimeout(() => {
-    toggleClass(diceRollResult, "dice_result_display_final");
+    // toggleClass(diceRollResult, "dice_result_display_final");
     playDiceSound(Number(roll1));
   }, 1110);
 
@@ -1009,10 +1010,10 @@ function rollOneDie(result) {
     turnOneRolls.push(roll1);
     if (turnOneRolls.length === 2) {
       turnOneEnd();
-      shrinkDiceResult();
+      // shrinkDiceResult();
       return;
     }
-    shrinkDiceResult();
+    // shrinkDiceResult();
     sendGameMessage({
       method: "changeTurn",
       params: "playerR firstTurn",
@@ -1058,20 +1059,20 @@ function rollTwoDice(result) {
     } else {
       totalRoll = roll1 + roll2;
     }
-    diceRollResult.textContent = Number(totalRoll);
+    diceRollResult1.textContent = Number(totalRoll);
     // Number((diceResult = totalRoll));
   }, 1010);
   setTimeout(() => {
-    toggleClass(diceRollResult, "dice_result_display_final");
+    // toggleClass(diceRollResult, "dice_result_display_final");
     if (doubleRoll === true) {
       console.log(`Double Roll ${totalRoll}`);
     } else {
       playDiceSound(totalRoll);
     }
   }, 1110);
-  setTimeout(() => {
-    shrinkDiceResult();
-  }, 2500);
+  // setTimeout(() => {
+  //   shrinkDiceResult();
+  // }, 2500);
 }
 
 // Creates an animation of the dice faces cycling through their possibles, every 100 milliseconds for 2 seconds.
@@ -1520,21 +1521,21 @@ function addCurrentGameClass(currentGameFlag) {
   }
 }
 
-function addPlayerDetails(player, userObject) {
-  if (player === 1) {
-    console.log(`Add Player Details - Player 1: ${JSON.stringify(userObject)}`);
-    player1Name.textContent = userObject.displayName;
-    player1Portait.src = userObject.playerPortrait;
-    player1Portait.style.backgroundColor = userObject.portraitColour;
-    player1Rating.textContent = userObject.playerRating;
-  } else {
-    console.log(`Add player details - Player 2: ${JSON.stringify(userObject)}`);
-    player2Name.textContent = userObject.displayName;
-    player2Portait.src = userObject.playerPortrait;
-    player2Portait.style.backgroundColor = userObject.portraitColour;
-    player2Rating.textContent = userObject.playerRating;
-  }
-}
+// function addPlayerDetails(player, userObject) {
+//   if (player === 1) {
+//     console.log(`Add Player Details - Player 1: ${JSON.stringify(userObject)}`);
+//     player1Name.textContent = userObject.displayName;
+//     player1Portait.src = userObject.playerPortrait;
+//     player1Portait.style.backgroundColor = userObject.portraitColour;
+//     player1Rating.textContent = userObject.playerRating;
+//   } else {
+//     console.log(`Add player details - Player 2: ${JSON.stringify(userObject)}`);
+//     player2Name.textContent = userObject.displayName;
+//     player2Portait.src = userObject.playerPortrait;
+//     player2Portait.style.backgroundColor = userObject.portraitColour;
+//     player2Rating.textContent = userObject.playerRating;
+//   }
+// }
 
 // COOKIE FUNCTIONS
 
@@ -1556,10 +1557,10 @@ function cookieCheck(cookieName) {
     .find((row) => row.startsWith(`${cookieName}=`));
   if (cookie) {
     console.log(`Cookie: ${JSON.stringify(cookie)}`);
-    cookiesAcceptedFlag = true;
+    // cookiesAcceptedFlag = true;
     console.log(`COOKIE - RUNNING`);
-    [userIP, userUsername, userPassword, userDisplayName] =
-      readCookie(cookieName);
+    // [userIP, userUsername, userPassword, userDisplayName] =
+    //   readCookie(cookieName);
     console.log(`User has previously enabled cookies!`);
   } else {
     console.log(`Cookie: No cookie`);
@@ -1635,10 +1636,10 @@ function setCookieUserDetails() {
 function acceptCookies() {
   const cookieValues = createCookieDefaultValues();
   createCookie("userDetails", cookieValues, 1);
-  [userIP, userUsername, userPassword, userDisplayName] =
-    readCookie("userDetails");
+  // [userIP, userUsername, userPassword, userDisplayName] =
+  //   readCookie("userDetails");
   ipTest();
-  cookiesAcceptedFlag = true;
+  // cookiesAcceptedFlag = true;
   hideCookieBar();
 }
 
@@ -1783,9 +1784,9 @@ function turnOneEnd() {
 
 // Allows the diceResult element to shrink back down to its original size and style
 // Called by rollOneDie(), rollTwoDice()
-function shrinkDiceResult() {
-  diceRollResult.classList.remove("dice_result_display_final");
-}
+// function shrinkDiceResult() {
+//   diceRollResult.classList.remove("dice_result_display_final");
+// }
 
 ///////////////////////////////
 // AD SECTION FUNCTIONS
@@ -1851,10 +1852,10 @@ function step3Process() {
     playersSection.classList.remove("scroll_on");
     playersXButton.classList.add("hidden");
     playersXButton.classList.add("no_pointer_events");
-    player1NameSection.classList.add("show");
-    player1NameSection.classList.add("scroll_on");
-    player2NameSection.classList.add("show");
-    player2NameSection.classList.add("scroll_on");
+    // player1NameSection.classList.add("show");
+    // player1NameSection.classList.add("scroll_on");
+    // player2NameSection.classList.add("show");
+    // player2NameSection.classList.add("scroll_on");
     gamestartBox.classList.remove("show");
     diceSection.classList.add("show");
     diceSection.classList.add("scroll_on");
@@ -1868,7 +1869,7 @@ function step3Process() {
     playersButton.classList.remove("grey_button");
     opponentObjectHere.displayName = buttonGamestartOpponent.textContent;
     const opponentName = opponentObjectHere.displayName;
-    addPlayerDetails(2, opponentObjectHere);
+    // addPlayerDetails(2, opponentObjectHere);
     startGameMessages("fun", opponentName);
     openingJingle.play();
     helperBox.classList.remove("show");
@@ -1901,7 +1902,7 @@ function step3Process() {
 function assignPlayers() {
   const result = Math.round(Math.random()) + 1;
   arrowSpinning.play();
-  spinAnimation();
+  // spinAnimation();
   currentPlayerTurn = result === 0 ? "w" : "r";
   let chatHTML;
   // if (playerColourHere === "w") {
@@ -1929,22 +1930,22 @@ function assignPlayers() {
 }
 
 function applyTurn1Styling() {
-  playerArrow.classList.add("show");
-  assignPlayersSectionClasses(playerColourHere);
+  // playerArrow.classList.add("show");
+  // assignPlayersSectionClasses(playerColourHere);
   applyTurnStyling();
 }
 
 function applyTurnStyling() {
   if (currentPlayerTurn === "w") {
     console.log(`Current user is player W`);
-    playerArrow.classList.remove("arrow_rotate");
-    player1NameSection.classList.add("focus_element_thick");
-    player2NameSection.classList.remove("focus_element_thick");
+    // playerArrow.classList.remove("arrow_rotate");
+    // player1NameSection.classList.add("focus_element_thick");
+    // player2NameSection.classList.remove("focus_element_thick");
   } else if (currentPlayerTurn === "r") {
-    playerArrow.classList.add("arrow_rotate");
+    // playerArrow.classList.add("arrow_rotate");
     console.log(`Other player is player R`);
-    player1NameSection.classList.remove("focus_element_thick");
-    player2NameSection.classList.add("focus_element_thick");
+    // player1NameSection.classList.remove("focus_element_thick");
+    // player2NameSection.classList.add("focus_element_thick");
   }
 }
 
@@ -2006,10 +2007,10 @@ function resetSite() {
   greyOutButtons.forEach((current) => {
     current.classList.add("grey_button");
   });
-  playersSection.style.top = "15%";
-  playersSection.style.left = "1%";
-  imbedGame.classList.remove("show");
-  imbedGame.classList.add("hidden");
+  // playersSection.style.top = "15%";
+  // playersSection.style.left = "1%";
+  // imbedGame.classList.remove("show");
+  // imbedGame.classList.add("hidden");
   imbedGame.classList.add("no_pointer_events");
   return;
 }
@@ -2050,20 +2051,20 @@ function resetDice() {
   diceFace1.src = "img/dice-six.png";
   diceFace2.src = "img/dice-six.png";
   diceFace2.style.opacity = 0;
-  diceRollResult.textContent = 6;
+  // diceRollResult.textContent = 6;
   firstTurn = true;
 }
 
-function assignPlayersSectionClasses(playerColourHere) {
-  if (playerColourHere === "w") {
-    player1Section = player1NameSection;
-    player2Section = player2NameSection;
-  } else if (playerColourHere === "r") {
-    player1Section = player2NameSection;
-    player2Section = player1NameSection;
-  }
-  return;
-}
+// function assignPlayersSectionClasses(playerColourHere) {
+//   if (playerColourHere === "w") {
+//     player1Section = player1NameSection;
+//     player2Section = player2NameSection;
+//   } else if (playerColourHere === "r") {
+//     player1Section = player2NameSection;
+//     player2Section = player1NameSection;
+//   }
+//   return;
+// }
 
 function changeGameState(state) {
   switch (state) {
@@ -2158,13 +2159,13 @@ function changeGameState(state) {
   // sendMessageToIframe(gameStateMessage);
 }
 
-function spinAnimation() {
-  playerArrow.classList.add("spinning_arrow");
-  setTimeout(() => {
-    assignPlayersSectionClasses(playerColourHere);
-    playerArrow.classList.remove("spinning_arrow");
-  }, 3500);
-}
+// function spinAnimation() {
+//   playerArrow.classList.add("spinning_arrow");
+//   setTimeout(() => {
+//     assignPlayersSectionClasses(playerColourHere);
+//     playerArrow.classList.remove("spinning_arrow");
+//   }, 3500);
+// }
 
 function challengeSuccessful(opponentName) {
   if (challengeCancel === false && challengeAccepted === true) {
