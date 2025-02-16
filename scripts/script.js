@@ -116,12 +116,12 @@ const otherGamesDisplay = document.querySelector(".other_games_display");
 
 // Floating button elements
 const floatingButtonsMain = document.querySelector(".floating_buttons_main");
-const floatingButtonsToggle = document.querySelector(
-  ".floating_buttons_toggle"
-);
-const floatingButtonsArrow = document.querySelector(
-  ".floating_buttons_toggler_arrow"
-);
+// const floatingButtonsToggle = document.querySelector(
+//   ".floating_buttons_toggle"
+// );
+// const floatingButtonsArrow = document.querySelector(
+//   ".floating_buttons_toggler_arrow"
+// );
 const forfeitButton = document.querySelector(".button_forfeit");
 const settingsButton = document.querySelector(".button_settings");
 const playersButton = document.querySelector(".button_players");
@@ -661,6 +661,7 @@ buttonChallengeCancel.addEventListener("click", () => {
   });
   setTimeout(() => {
     challengeSection.classList.add("no_pointer_events");
+    gamestartBox.classList.remove("no_pointer_events");
     gameStartButtonChallenge.classList.remove("activated_button");
     challengeSection.classList.remove("show");
   }, 2000);
@@ -735,7 +736,9 @@ playersButton.addEventListener("click", () => {
   toggleClass(playersXButton, "hidden");
   toggleClass(playersXButton, "no_pointer_events");
   playersSection.classList.remove("focus_element_thick");
-  playersSection.style.top = "calc(15% + 64px)";
+  playersSection.style.top = "40px";
+  rulesSection.style.top = "60px";
+  otherGamesSection.style.top = "80px";
   setTimeout(() => {
     playersFriends.innerHTML = "";
     playersPlayedBefore.innerHTML = "";
@@ -839,23 +842,23 @@ otherGamesXButton.addEventListener("click", () => {
 });
 
 // CLS SECTION LISTENERS
-clsButton.addEventListener("click", playClickSound);
+// clsButton.addEventListener("click", playClickSound);
 
 // FLOATING BUTTONS SECTION LISTENERS
-floatingButtonsToggle.addEventListener("click", () => {
-  playClickSound();
-  if (floatingButtonsMain.classList.contains("show")) {
-    floatingButtonsArrow.innerHTML = togglerUpArrow;
-    floatingButtonsToggle.title = `Show Menu Buttons`;
-  } else {
-    floatingButtonsArrow.innerHTML = togglerDownArrow;
-    floatingButtonsToggle.title = `Hide Menu Buttons`;
-  }
-  setTimeout(() => {
-    toggleClass(floatingButtonsMain, "show");
-    toggleClass(floatingButtonsMain, "scroll_on");
-  }, 10);
-});
+// floatingButtonsToggle.addEventListener("click", () => {
+//   playClickSound();
+//   if (floatingButtonsMain.classList.contains("show")) {
+//     floatingButtonsArrow.innerHTML = togglerUpArrow;
+//     floatingButtonsToggle.title = `Show Menu Buttons`;
+//   } else {
+//     floatingButtonsArrow.innerHTML = togglerDownArrow;
+//     floatingButtonsToggle.title = `Hide Menu Buttons`;
+//   }
+//   setTimeout(() => {
+//     toggleClass(floatingButtonsMain, "show");
+//     toggleClass(floatingButtonsMain, "scroll_on");
+//   }, 10);
+// });
 
 // DICE SECTION LISTENERS
 diceRollResult1.addEventListener("click", () => {
@@ -936,6 +939,7 @@ function showMain() {
     buttonGamestartFun.classList.remove("no_pointer_events");
     gamestartBox.classList.remove("no_pointer_events");
     helperBox.classList.add("show");
+    floatingButtonsMain.classList.add("show");
   }, 3000);
   setTimeout(() => {
     playersFriends.innerHTML = "";
