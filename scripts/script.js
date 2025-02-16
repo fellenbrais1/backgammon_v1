@@ -35,7 +35,7 @@ const imbedGame = document.getElementById("content_container");
 
 // Forfeit section elements
 const forfeitSection = document.querySelector(".forfeit_section");
-const forfeitXButton = document.querySelector(".forfeit_x_button");
+// const forfeitXButton = document.querySelector(".forfeit_x_button");
 const buttonForfeitYes = document.querySelector(".forfeit_button_yes");
 const buttonForfeitNo = document.querySelector(".forfeit_button_no");
 
@@ -207,14 +207,14 @@ const hideElementsList = [
   otherGamesSection,
   rulesSection,
   playersSection,
-  +adNotification,
+  adNotification,
   forfeitSection,
   helperBox,
   buttonGamestartFun,
   buttonGamestartOpponent,
   buttonForfeitYes,
   buttonForfeitNo,
-  forfeitXButton,
+  // forfeitXButton,
   // gameBoard,
   // introDisplay,
   gameStartButtonChallenge,
@@ -695,11 +695,11 @@ forfeitButton.addEventListener("click", () => {
   forfeitSection.classList.add("show");
 });
 
-forfeitXButton.addEventListener("click", () => {
-  playClickSound();
-  forfeitSection.classList.remove("show");
-  forfeitSection.classList.add("no_pointer_events");
-});
+// forfeitXButton.addEventListener("click", () => {
+//   playClickSound();
+//   forfeitSection.classList.remove("show");
+//   forfeitSection.classList.add("no_pointer_events");
+// });
 
 buttonForfeitYes.addEventListener("click", () => {
   playClickSound();
@@ -707,7 +707,7 @@ buttonForfeitYes.addEventListener("click", () => {
   hideElements(hideSlideInsList);
   buttonForfeitYes.classList.add("no_pointer_events");
   buttonForfeitNo.classList.add("no_pointer_events");
-  forfeitXButton.classList.add("no_pointer_events");
+  // forfeitXButton.classList.add("no_pointer_events");
   floatingButtonsMain.classList.add("no_pointer_events");
   setTimeout(() => {
     setTimeout(() => {
@@ -934,6 +934,7 @@ function showMain() {
     gamestartBox.classList.add("focus_element_thick");
     buttonGamestartFun.classList.add("focus_element");
     buttonGamestartFun.classList.remove("no_pointer_events");
+    gamestartBox.classList.remove("no_pointer_events");
     helperBox.classList.add("show");
   }, 3000);
   setTimeout(() => {

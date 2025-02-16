@@ -580,10 +580,10 @@ html {
 /* FORFEIT SECTION */
 .forfeit_section {
   position: absolute;
-  top: 30%;
-  left: 35%;
-  height: 300px;
-  width: 600px;
+  top: 127px;
+  left: 70px;
+  height: 250px;
+  width: 540px;
   padding-top: 24px;
   z-index: 9;
   text-align: center;
@@ -598,7 +598,7 @@ html {
 .forfeit_block {
   display: grid;
   grid-template-rows: 50px 40px auto;
-  row-gap: 16px;
+  /* row-gap: 16px; */
 }
 
 .forfeit_text {
@@ -1087,9 +1087,9 @@ html {
   border-radius: 25px;
   background-color: var(--light_felt_green);
   z-index: 0;
-  /* opacity: 0; */
-  opacity: 1;
-  /* transform: translateY(1000px); */
+  opacity: 0;
+  /* opacity: 1; */
+  transform: translateY(1000px);
   transition: opacity 1s ease-in-out, transform 3s ease-in-out;
 }
 
